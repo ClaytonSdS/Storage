@@ -1,20 +1,833 @@
 #: import NoTransition kivy.uix.screenmanager.NoTransition
-#: import OneLineListItem kivymd.uix.list.OneLineListItem
 #: import GridLayout kivymd.uix.gridlayout.MDGridLayout
 #: import MDRaisedButton kivymd.uix.button.MDRaisedButton
 #: import get_color_from_hex kivy.utils.get_color_from_hex
 #: import Image kivy.uix.image.Image
 #: import RoundedRectangle kivy.graphics.RoundedRectangle
 #: import Clock kivy.clock.Clock
-#: import OneLineListItem kivymd.uix.list.OneLineListItem
 #: import Factory kivy.factory.Factory
-#: import MDSpinner kivymd.uix.spinner.MDSpinner
 #:import get_color_from_hex kivy.utils.get_color_from_hex
-#:import Gradient kivy_gradient.Gradient
 #: import partial functools.partial
 #:import FadeTransition kivy.uix.screenmanager.FadeTransition
 
+<ItemConfirm>
+    on_release: root.set_icon(check)
 
+    CheckboxLeftWidget:
+        id: check
+        group: "check"
+
+<Fornecedores>
+    recycle_view: recycle_view
+    items_box: items_box
+    orientation: "vertical"
+    size_hint_y: None
+    height: dp(400)
+    spacing: 10
+
+    MDBoxLayout:
+        orientation: 'vertical'
+        md_bg_color: 1,0,0,0
+        pos_hint: {"center_x":0.5, "center_y": 0.5}
+        size: self.parent.size
+        GridLayout:
+            rows: 2
+            cols:1
+            spacing: 10
+
+            # HEADER SUPERIOR COM NOMES DAS TABELAS E BARRA DE BUSCA
+            MDBoxLayout:
+                orientation: "vertical"
+                size_hint_y: 0.25
+                MDBoxLayout:
+                    size_hint_y: 0.2
+                    MDBoxLayout:
+                        size_hint_x:0.8
+                        orientation: "horizontal"
+                        Label:
+                            text: "ID"
+                            halign: "center"
+                            valign: "middle"
+                            font_size: 15
+                            markup: True
+                            color: get_color_from_hex('#242425')
+                            canvas.before:
+                                Color:
+                                    rgba: get_color_from_hex('#676767')
+                                Line:
+                                    width: 0.8
+                                    rectangle: self.x, self.y, self.width, self.height
+
+                    MDBoxLayout:
+                        orientation: "horizontal"
+                        size_hint_x: 1.8
+                        Label:
+                            text: "FORNECEDOR"
+                            halign: "center"
+                            valign: "middle"
+                            font_size: 15
+                            markup: True
+                            color: get_color_from_hex('#242425')
+                            canvas.before:
+                                Color:
+                                    rgba: get_color_from_hex('#676767')
+                                Line:
+                                    width: 0.8
+                                    rectangle: self.x, self.y, self.width, self.height
+
+                    MDBoxLayout:
+                        orientation: "horizontal"
+                        Label:
+                            text: "-"
+                            halign: "center"
+                            valign: "middle"
+                            font_size: 15
+                            markup: True
+                            color: get_color_from_hex('#242425')
+                            canvas.before:
+                                Color:
+                                    rgba: get_color_from_hex('#676767')
+                                Line:
+                                    width: 0.8
+                                    rectangle: self.x, self.y, self.width, self.height
+                MDBoxLayout:
+                    id: search_clientes_box
+                    md_bg_color: 0,0,0,0
+                    size_hint: (1,0.2)
+                    InputCapsLock:
+                        id: search_bar_fornecedores
+                        size_hint: 2.61, 1
+                        height: "30dp"
+                        pos_hint: {"center_x": .5, "center_y": .5}
+                        canvas.before:
+                            Color:
+                                rgba: get_color_from_hex('#676767')
+                            Line:
+                                width: 0.3
+                                rectangle: self.x, self.y, self.width, self.height
+                    MDBoxLayout:
+                        md_bg_color: 1,0,0,0
+                        width: "45dp"
+                        pos_hint: {"center_x": .5, "center_y": .5}
+                        canvas.before:
+                            Color:
+                                rgba: get_color_from_hex('#3b3b3b')
+                            Line:
+                                width: 0.3
+                                rectangle: self.x, self.y, self.width, self.height
+                        MDIconButton:
+                            on_release: root.search_fornecedor(root.ids.search_bar_fornecedores.text)
+                            icon: "account-search"
+                            size_hint_y: 1
+                            size_hint_x: 1
+                            pos_hint: {"center_x": .5, "center_y": .5}
+
+            MDBoxLayout:
+                orientation: 'vertical'
+                md_bg_color: 1,0,0,0
+                size_hint: (1,1)
+                spacing: 5
+
+                RecycleView:
+                    id: recycle_view
+                    size_hint: 1, 0.9
+                    viewclass: "Fornecedores_"
+                    RecycleBoxLayout:
+                        id: items_box
+                        orientation: "vertical"
+                        default_size_hint: 1, None
+                        size_hint: 1, None
+                        height: self.minimum_height
+
+
+
+
+
+<Conteudo_CriarNovaMateria>
+    orientation: "vertical"
+    size_hint_y: None
+    height: dp(200)
+    spacing: 10
+    MDBoxLayout:
+        orientation: 'vertical'
+        md_bg_color: 1,0,0,0
+        pos_hint: {"center_x":0.5, "center_y": 0.5}
+        size: self.parent.size
+        GridLayout:
+            rows: 2
+            cols:1
+            spacing: 10
+            MDBoxLayout:
+                orientation: 'vertical'
+                md_bg_color: 1,0,0,0
+                size_hint: (1,1)
+                spacing: 5
+
+                MDBoxLayout:
+                    md_bg_color: get_color_from_hex('#eeeeee')
+                    orientation: "horizontal"
+                    Label:
+                        text: "[b]CLASSE[/b]"
+                        halign: "center"
+                        valign: "middle"
+                        font_size: 15
+                        markup: True
+                        color: get_color_from_hex('#242425')
+                        canvas.before:
+                            Color:
+                                rgba: get_color_from_hex('#676767')
+                            Line:
+                                width: 0.8
+                                rectangle: self.x, self.y, self.width, self.height
+
+                    MDBoxLayout:
+                        size_hint_x: 1.6
+                        canvas.before:
+                            Color:
+                                rgba: get_color_from_hex('#676767')
+                            Line:
+                                width: 0.8
+                                rectangle: self.x, self.y, self.width, self.height
+                        Classes_Spinner:
+                            id: spinnerClasses
+                            size_hint_x: 0.5
+                            background_normal: 'spin.png'
+                            background_color: get_color_from_hex('#323335')
+                            #on_press: self.background_color= root.cor_aplicativo_tuple
+
+                MDBoxLayout:
+                    md_bg_color: get_color_from_hex('#eeeeee')
+                    orientation: "horizontal"
+                    Label:
+                        text: "[b]NOME[/b]"
+                        halign: "center"
+                        valign: "middle"
+                        font_size: 15
+                        markup: True
+                        color: get_color_from_hex('#242425')
+                        canvas.before:
+                            Color:
+                                rgba: get_color_from_hex('#676767')
+                            Line:
+                                width: 0.8
+                                rectangle: self.x, self.y, self.width, self.height
+                    InputCapsLock:
+                        size_hint_x: 1.6
+                        id: info_add_nome
+                        font_size: 17
+
+                MDBoxLayout:
+                    md_bg_color: get_color_from_hex('#eeeeee')
+                    orientation: "horizontal"
+                    Label:
+                        text: "[b]TELEFONE[/b]"
+                        halign: "center"
+                        valign: "middle"
+                        font_size: 15
+                        markup: True
+                        color: get_color_from_hex('#242425')
+                        canvas.before:
+                            Color:
+                                rgba: get_color_from_hex('#676767')
+                            Line:
+                                width: 0.8
+                                rectangle: self.x, self.y, self.width, self.height
+                    TextInput:
+                        id: info_add_telefone
+                        input_filter: "int"
+                        font_size: 17
+                        size_hint_x: 1.6
+
+<Header_Estoque_Tabela>
+    MDBoxLayout:
+        orientation: "vertical"
+        size_hint_x: 0.4
+        canvas.before:
+            Color:
+                rgba: get_color_from_hex('#d9d9d9')
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+        Label:
+            text: "[b]ID[/b]"
+            font_size: 15
+            markup: True
+            color: get_color_from_hex('#242425')
+
+    MDBoxLayout:
+        orientation: "vertical"
+        canvas.before:
+            Color:
+                rgba: get_color_from_hex('#d9d9d9')
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+        Label:
+            text: "[b]Categoria[/b]"
+            font_size: 15
+            markup: True
+            color: get_color_from_hex('#242425')
+
+    MDBoxLayout:
+        size_hint_x: 1.2
+        orientation: "vertical"
+        canvas.before:
+            Color:
+                rgba: get_color_from_hex('#d9d9d9')
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+        Label:
+            text: "[b]Produto[/b]"
+            font_size: 15
+            markup: True
+            color: get_color_from_hex('#242425')
+
+    MDBoxLayout:
+        orientation: "vertical"
+        size_hint_x: 0.6
+        canvas.before:
+            Color:
+                rgba: get_color_from_hex('#d9d9d9')
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+        Label:
+            text: "[b]Fornecedor[/b]"
+            font_size: 15
+            markup: True
+            color: get_color_from_hex('#242425')
+
+    MDBoxLayout:
+        orientation: "vertical"
+        size_hint_x: 0.6
+        canvas.before:
+            Color:
+                rgba: get_color_from_hex('#d9d9d9')
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+        Label:
+            text: "[b]Quantidade[/b]"
+            font_size: 15
+            markup: True
+            color: get_color_from_hex('#242425')
+
+    MDBoxLayout:
+        size_hint_x: 0.2
+        orientation: "vertical"
+        canvas.before:
+            Color:
+                rgba: get_color_from_hex('#d9d9d9')
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+        Label:
+            text: ""
+            font_size: 15
+            markup: True
+            color: get_color_from_hex('#242425')
+
+
+
+<Header_Clientes_Tabela>
+    MDBoxLayout:
+        orientation: "vertical"
+        size_hint_x: 0.4
+        canvas.before:
+            Color:
+                rgba: get_color_from_hex('#d9d9d9')
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+        Label:
+            text: "[b]ID[/b]"
+            font_size: 15
+            markup: True
+            color: get_color_from_hex('#242425')
+
+    MDBoxLayout:
+        orientation: "vertical"
+        size_hint_x: 0.6
+        canvas.before:
+            Color:
+                rgba: get_color_from_hex('#d9d9d9')
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+        Label:
+            text: "[b]Classe[/b]"
+            font_size: 15
+            markup: True
+            color: get_color_from_hex('#242425')
+
+    MDBoxLayout:
+        orientation: "vertical"
+        canvas.before:
+            Color:
+                rgba: get_color_from_hex('#d9d9d9')
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+        Label:
+            text: "[b]Nome[/b]"
+            font_size: 15
+            markup: True
+            color: get_color_from_hex('#242425')
+
+    MDBoxLayout:
+        orientation: "vertical"
+        size_hint_x: 0.5
+        canvas.before:
+            Color:
+                rgba: get_color_from_hex('#d9d9d9')
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+        Label:
+            text: "[b]Telefone[/b]"
+            font_size: 15
+            markup: True
+            color: get_color_from_hex('#242425')
+
+    MDBoxLayout:
+        orientation: "vertical"
+        size_hint_x: 0.2
+        canvas.before:
+            Color:
+                rgba: get_color_from_hex('#d9d9d9')
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+        Label:
+            text: "[b]Info[/b]"
+            font_size: 15
+            markup: True
+            color: get_color_from_hex('#242425')
+
+<Fornecedores_@BoxLayout>:
+    orientation: "horizontal"
+    size_hint: 1, None
+    height: 1
+    id_: ''
+    fornecedor_: ''
+    md_bg_color: 0,0,0,0
+
+    BoxLayout:
+        padding: 10
+        size_hint_x: 0.8
+        canvas.before:
+            Color:
+                rgba: get_color_from_hex('#323335')
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+        orientation: "horizontal"
+
+        Label:
+            font_size: 14
+            text: root.id_
+            size_hint_x: 1
+            text_size: self.size
+            valign: "middle"
+            halign: "center"
+            markup: True
+            color: get_color_from_hex('#242425')
+
+    BoxLayout:
+        size_hint_x: 1.8
+        padding: 10
+        canvas.before:
+            Color:
+                rgba: get_color_from_hex('#323335')
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+        Label:
+            font_size: 14
+            text: root.fornecedor_
+            size_hint_x: 1
+            text_size: self.size
+            valign: "middle"
+            halign: "center"
+            markup: True
+            color: get_color_from_hex('#242425')
+
+    BoxLayout:
+        canvas.before:
+            Color:
+                rgba: get_color_from_hex('#d9d9d9')
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+
+        FornecedoresButton:
+            icon: "plus"
+            on_release: app.root.get_screen("Storage").mudar_fornecedor(root, root.fornecedor_)
+            text: "[b]Selecionar[/b]"
+            pos_hint: {"center_x": .5, "center_y": .5}
+            md_bg_color: get_color_from_hex("#323335")
+            line_color: get_color_from_hex("#000000")
+            size_hint: (1,1)
+            theme_text_color: "Custom"
+            text_color: get_color_from_hex("#FFFFFF")
+            icon_color: get_color_from_hex("#FFFFFF")
+
+
+
+
+<Estoque@BoxLayout>:
+    orientation: "horizontal"
+    size_hint: 1, None
+    height: 1
+    id_: ''
+    nome_: ''
+    categoria_: ''
+    subcategoria_: ''
+    quantidade_: ''
+    fornecedor_: ''
+    md_bg_color: 0,0,0,0
+
+    BoxLayout:
+        padding: 10
+        size_hint_x: 0.4
+        canvas.before:
+            Color:
+                rgba: get_color_from_hex('#d9d9d9')
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+        Label:
+            font_size: 14
+            text: root.id_
+            size_hint_x: 1
+            text_size: self.size
+            valign: "middle"
+            halign: "center"
+            markup: True
+            color: get_color_from_hex('#242425')
+
+
+    BoxLayout:
+        padding: 10
+        canvas.before:
+            Color:
+                rgba: get_color_from_hex('#d9d9d9')
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+
+        Label:
+            font_size: 14
+            text: root.categoria_
+            size_hint_x: 1
+            text_size: self.size
+            valign: "middle"
+            halign: "center"
+            markup: True
+            color: get_color_from_hex('#242425')
+
+    BoxLayout:
+        size_hint_x: 1.2
+        padding: 10
+        canvas.before:
+            Color:
+                rgba: get_color_from_hex('#d9d9d9')
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+        Label:
+            font_size: 14
+            text: root.nome_
+            size_hint_x: 1
+            text_size: self.size
+            valign: "middle"
+            halign: "center"
+            markup: True
+            color: get_color_from_hex('#242425')
+
+    BoxLayout:
+        padding: 10
+        size_hint_x: 0.6
+        canvas.before:
+            Color:
+                rgba: get_color_from_hex('#d9d9d9')
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+        Label:
+            font_size: 14
+            text: root.fornecedor_
+            size_hint_x: 1
+            text_size: self.size
+            valign: "middle"
+            halign: "center"
+            markup: True
+            color: get_color_from_hex('#242425')
+
+    BoxLayout:
+        padding: 10
+        size_hint_x: 0.6
+        canvas.before:
+            Color:
+                rgba: get_color_from_hex('#d9d9d9')
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+        Label:
+            font_size: 14
+            text: root.quantidade_
+            size_hint_x: 1
+            text_size: self.size
+            valign: "middle"
+            halign: "center"
+            markup: True
+            color: get_color_from_hex('#242425')
+
+    ButtonTip_Clientes:
+        canvas.before:
+            Color:
+                rgba: get_color_from_hex('#d9d9d9')
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+
+        on_release: app.estoque_info_open(root.parent.parent.parent.parent.children[0])
+        on_press: app.root.get_screen("Storage").refresh_infos(root.id_, root.categoria_, root.nome_,  root.fornecedor_, root.quantidade_)
+        on_press: app.root.get_screen("Storage").ids.label_info_storage.text = "[b]Info[/b]"
+        icon: "chevron-right"
+        icon_size: "35sp"
+        pos_hint: {"center_x":0.5, "center_y":0.5}
+        size_hint: (0.2,1)
+        theme_icon_color: "Custom"
+        icon_color: get_color_from_hex('#242425')
+        md_bg_color: get_color_from_hex('#{}'.format(self.cor))
+
+
+<ListItem@BoxLayout>:
+    orientation: "horizontal"
+    size_hint: 1, None
+    height: 1
+    id_: ''
+    classe_: ''
+    nome_: ''
+    telefone_: ''
+
+    md_bg_color: 0,0,0,0
+
+    BoxLayout:
+        padding: 10
+        size_hint_x: 0.4
+        canvas.before:
+            Color:
+                rgba: get_color_from_hex('#d9d9d9')
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+        Label:
+            font_size: 14
+            text: root.id_
+            size_hint_x: 1
+            text_size: self.size
+            valign: "middle"
+            halign: "center"
+            markup: True
+            color: get_color_from_hex('#242425')
+    BoxLayout:
+        padding: 10
+        size_hint_x: 0.6
+        canvas.before:
+            Color:
+                rgba: get_color_from_hex('#d9d9d9')
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+        Label:
+            font_size: 14
+            text: root.classe_
+            size_hint_x: 1
+            text_size: self.size
+            valign: "middle"
+            halign: "center"
+            markup: True
+            color: get_color_from_hex('#242425')
+    BoxLayout:
+        padding: 10
+        canvas.before:
+            Color:
+                rgba: get_color_from_hex('#d9d9d9')
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+        Label:
+            font_size: 14
+            text: root.nome_
+            size_hint_x: 1
+            text_size: self.size
+            valign: "middle"
+            halign: "center"
+            markup: True
+            color: get_color_from_hex('#242425')
+    BoxLayout:
+        padding: 10
+        size_hint_x: 0.5
+        canvas.before:
+            Color:
+                rgba: get_color_from_hex('#d9d9d9')
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+        Label:
+            font_size: 14
+            text: root.telefone_
+            size_hint_x: 1
+            text_size: self.size
+            valign: "middle"
+            halign: "center"
+            markup: True
+            color: get_color_from_hex('#242425')
+    ButtonTip_Clientes:
+        canvas.before:
+            Color:
+                rgba: get_color_from_hex('#d9d9d9')
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+
+        on_release: app.clientes_info_open(root.parent.parent.parent.parent.children[0])
+        on_press: app.root.get_screen("Clientes").refresh_infos(root.id_, root.classe_, root.nome_, root.telefone_)
+        on_release: app.root.get_screen("Clientes").ids.label_info.text = "[b]Mais Informações[/b]";
+        icon: "chevron-right"
+        icon_size: "35sp"
+        pos_hint: {"center_x":0.5, "center_y":0.5}
+        size_hint: (0.2,1)
+        theme_icon_color: "Custom"
+        icon_color: get_color_from_hex('#242425')
+        md_bg_color: get_color_from_hex('#{}'.format(self.cor))
+
+<ButtonTip_Behavior>:
+    size_hint: (None, None)
+    size: (70,20)
+    opacity: 0
+    auto_dismiss: True
+    overlay_color: [0, 0, 0, 0]
+    canvas:
+        Color:
+            rgba: get_color_from_hex("#242425")
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [(4.5, 4.5), (4.5, 4.5), (4.5, 4.5), (4.5, 4.5)]
+
+
+<Menu>
+    orientation: "vertical"
+    size_hint_y: None
+    height: self.parent.height
+    MDBoxLayout:
+        orientation: 'vertical'
+        pos_hint: {"center_x":0.5, "center_y": 0.5}
+        size: self.parent.size
+        GridLayout:
+            rows: 8
+            cols:1
+            spacing: 2
+            Menu_Botao:
+                size_hint_y: None
+                height: 70
+                orientation: "horizontal"
+                Image:
+                    source: 'icon.png'
+                    size_hint: 0.5,0.5
+                    pos_hint: {'center_x': .5,'center_y': .5}
+                    allow_stretch: False
+                    allow_ratio: False
+                    center_x: self.parent.center_x
+                    center_y: self.parent.center_y
+            # INICIO
+            Menu_Botao:
+                orientation: "horizontal"
+                ButtonTip:
+                    icon: "view-dashboard"
+                    icon_size: "35sp"
+                    size_hint: (0.5,1)
+                    pos_hint: {"center_x":0.5, "center_y":0.5}
+                    theme_icon_color: "Custom"
+                    icon_color: get_color_from_hex('#242425')
+                    on_release: root.parent.parent.parent.manager.current = "Inicio"; self.md_bg_color = get_color_from_hex("#eeeeee")
+
+            # VENDER
+            Menu_Botao:
+                orientation: "horizontal"
+                spacing: 0
+
+                ButtonTip:
+                    icon: "cart-outline"
+                    icon_size: "35sp"
+                    size_hint: (0.5,1)
+                    pos_hint: {"center_x":0.5, "center_y":0.5}
+                    theme_icon_color: "Custom"
+                    icon_color: get_color_from_hex('#242425')
+                    on_release: root.parent.parent.parent.manager.current = "Sell"; self.md_bg_color = get_color_from_hex("#eeeeee")
+
+            # ESTOQUE
+            Menu_Botao:
+                orientation: "horizontal"
+                spacing: 0
+                ButtonTip:
+                    icon: "package-variant"
+                    icon_size: "35sp"
+                    size_hint: (0.5,1)
+                    pos_hint: {"center_x":0.5, "center_y":0.5}
+                    theme_icon_color: "Custom"
+                    icon_color: get_color_from_hex('#242425')
+                    on_release: root.parent.parent.parent.manager.current = "Storage"; self.md_bg_color = get_color_from_hex("#eeeeee")
+
+            # CLIENTES
+            Menu_Botao:
+                orientation: "horizontal"
+                spacing: 0
+                ButtonTip:
+                    icon: "account-group"
+                    icon_size: "35sp"
+                    size_hint: (0.5,1)
+                    pos_hint: {"center_x":0.5, "center_y":0.5}
+                    theme_icon_color: "Custom"
+                    icon_color: get_color_from_hex('#242425')
+                    on_release: root.parent.parent.parent.manager.current = "Clientes"; self.md_bg_color = get_color_from_hex("#eeeeee")
+
+            # REVISION
+            Menu_Botao:
+                size_hint_x: 0.5
+                orientation: "horizontal"
+                spacing: 0
+
+                ButtonTip:
+                    icon: "robot-happy"
+                    icon_size: "35sp"
+                    size_hint: (0.5,1)
+                    pos_hint: {"center_x":0.5, "center_y":0.5}
+                    theme_icon_color: "Custom"
+                    icon_color: get_color_from_hex('#242425')
+                    on_release: root.parent.parent.parent.manager.current = "IA"; self.md_bg_color = get_color_from_hex("#eeeeee")
+
+            # CONFIGURAÇÕES
+            Menu_Botao:
+                orientation: "horizontal"
+                spacing: 0
+                ButtonTip:
+                    icon: "cog"
+                    icon_size: "35sp"
+                    size_hint: (0.5,1)
+                    pos_hint: {"center_x":0.5, "center_y":0.5}
+                    theme_icon_color: "Custom"
+                    icon_color: get_color_from_hex('#242425')
+                    on_release: root.parent.parent.parent.manager.current = "Storage"; self.md_bg_color = get_color_from_hex("#eeeeee")
+
+            MDBoxLayout:
+                opacity: 100
+                size_hint: (1,2.5)
+                md_bg_color: get_color_from_hex("#eeeeee")
 
 
 
@@ -29,722 +842,950 @@ WindowManager:
 	IA:
 	    name: "IA"
 
+	Clientes:
+	    name: "Clientes"
+
+
 #///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 <Inicio>
     MDGridLayout:
         cols: 2
         rows: 1
+        md_bg_color: get_color_from_hex("#d9d9d9")
+        spacing: 2
         MDBoxLayout:
             id: menu
             orientation: "vertical"
             size_hint_x: None
-            width: int(0.185*self.parent.width)
-            md_bg_color: get_color_from_hex("#242425")
+            width: int(0.1*self.parent.width)
+            md_bg_color: get_color_from_hex("#d9d9d9")
             spacing: 2
-            Menu_Botao:
-                size_hint_y: None
-                height: 70
-                orientation: "horizontal"
-                Image:
-                    source: 'logo_extensa.png'
-                    size_hint: 0.7,0.7
-                    pos_hint: {'center_x': .5,'center_y': .5}
-                    allow_stretch: False
-                    allow_ratio: False
-                    center_x: self.parent.center_x
-                    center_y: self.parent.center_y
-
-            # BOTÃO INICIO
-            Menu_Botao:
-                size_hint_y: None
-                height: 70
-                orientation: "horizontal"
-                spacing: 0
-                on_release: root.manager.current = "Inicio"
-                MDIconButton:
-                    icon: "home"
-                    size_hint: (0.5,0.5)
-                    pos_hint: {"center_x":0.5, "center_y":0.5}
-                    theme_icon_color: "Custom"
-                    icon_color: get_color_from_hex('#FFFFFF')
-                MDLabel:
-                    markup: True
-                    size_hint: (1,1)
-                    color: get_color_from_hex('#FFFFFF')
-                    text: "[b]Inicio[/b]"
-                    halign: "center"
-                    valign: "middle"
-                    font_size: 17
-                MDIconButton:
-                    opacity: 0
-                    icon: "chevron-down"
-                    size_hint: (0.5,0.5)
-                    pos_hint: {"center_x":0.5, "center_y":0.5}
-                    theme_icon_color: "Custom"
-                    icon_color: get_color_from_hex('#FFFFFF')
-            # BOTAO VENDER
-            Menu_Botao:
-                size_hint_y: None
-                height: 70
-                orientation: "horizontal"
-                spacing: 0
-                on_release: root.manager.current = "Sell"
-                MDIconButton:
-                    icon: "cart-outline"
-                    size_hint: (0.5,0.5)
-                    pos_hint: {"center_x":0.5, "center_y":0.5}
-                    theme_icon_color: "Custom"
-                    icon_color: get_color_from_hex('#FFFFFF')
-                MDLabel:
-                    markup: True
-                    size_hint: (1,1)
-                    color: get_color_from_hex('#FFFFFF')
-                    text: "[b]Vender[/b]"
-                    halign: "center"
-                    valign: "middle"
-                    font_size: 17
-                MDIconButton:
-                    opacity: 0
-                    icon: "chevron-down"
-                    size_hint: (0.5,0.5)
-                    pos_hint: {"center_x":0.5, "center_y":0.5}
-                    theme_icon_color: "Custom"
-                    icon_color: get_color_from_hex('#FFFFFF')
-
-            # BOTÃO ESTOQUE
-            Menu_Botao:
-                size_hint_y: None
-                height: 70
-                orientation: "horizontal"
-                spacing: 0
-                on_release: root.manager.current = "Storage"
-                MDIconButton:
-                    icon: "store"
-                    size_hint: (0.5,0.5)
-                    pos_hint: {"center_x":0.5, "center_y":0.5}
-                    theme_icon_color: "Custom"
-                    icon_color: get_color_from_hex('#FFFFFF')
-                MDLabel:
-                    markup: True
-                    size_hint: (1,1)
-                    color: get_color_from_hex('#FFFFFF')
-                    text: "[b]Estoque[/b]"
-                    halign: "center"
-                    valign: "middle"
-                    font_size: 17
-                MDIconButton:
-                    opacity: 0
-                    icon: "chevron-down"
-                    size_hint: (0.5,0.5)
-                    pos_hint: {"center_x":0.5, "center_y":0.5}
-                    theme_icon_color: "Custom"
-                    icon_color: get_color_from_hex('#FFFFFF')
-            # BOTÃO ReVision
-            Menu_Botao:
-                size_hint_y: None
-                height: 70
-                orientation: "horizontal"
-                spacing: 0
-                on_release: root.manager.current = "IA"
-                MDIconButton:
-                    icon: "robot-happy"
-                    size_hint: (0.5,0.5)
-                    pos_hint: {"center_x":0.5, "center_y":0.5}
-                    theme_icon_color: "Custom"
-                    icon_color: get_color_from_hex('#FFFFFF')
-                MDLabel:
-                    markup: True
-                    size_hint: (1,1)
-                    color: get_color_from_hex('#FFFFFF')
-                    text: "[b]ReVision[/b]"
-                    halign: "center"
-                    valign: "middle"
-                    font_size: 17
-                MDIconButton:
-                    opacity: 0
-                    icon: "chevron-down"
-                    size_hint: (0.5,0.5)
-                    pos_hint: {"center_x":0.5, "center_y":0.5}
-                    theme_icon_color: "Custom"
-                    icon_color: get_color_from_hex('#FFFFFF')
-            # BOTÃO CONFIGURACOES
-            Menu_Botao:
-                elevation: 10
-                size_hint_y: None
-                height: 70
-                orientation: "horizontal"
-                spacing: 0
-                on_release: root.manager.current = "Setts"
-                MDIconButton:
-                    icon: "wrench"
-                    size_hint: (0.5,0.5)
-                    pos_hint: {"center_x":0.5, "center_y":0.5}
-                    theme_icon_color: "Custom"
-                    icon_color: get_color_from_hex('#FFFFFF')
-                MDLabel:
-                    markup: True
-                    size_hint: (1,1)
-                    color: get_color_from_hex('#FFFFFF')
-                    text: "[b]Configurações[/b]"
-                    halign: "center"
-                    valign: "middle"
-                    font_size: 17
-                MDIconButton:
-                    opacity: 0
-                    icon: "chevron-down"
-                    size_hint: (0.5,0.5)
-                    pos_hint: {"center_x":0.5, "center_y":0.5}
-                    theme_icon_color: "Custom"
-                    icon_color: get_color_from_hex('#FFFFFF')
-            Menu_Botao:
-                size_hint: (1,3)
+            Menu:
 
         #/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        # AREA LIVRE + BARRA DE MENU
         MDBoxLayout:
             orientation: 'vertical'
+            md_bg_color: get_color_from_hex("#d9d9d9")
             pos_hint: 0.5, 0.5
-            md_bg_color: get_color_from_hex('#ffffff')
-            MDLabel:
-                text: "Inicio"
-                halign: "center"
+            spacing: 2
+            MDBoxLayout:
+                size_hint_y: None
+                height: 70
+                md_bg_color: get_color_from_hex("#eeeeee")
+                orientation: "horizontal"
+                padding: [20,0]
+                MDLabel:
+                    markup: True
+                    text: "Inicio"
+                    font_size: 20
+                    font_name: "Roboto-Bold"
+            MDBoxLayout:
+                md_bg_color: get_color_from_hex("#eeeeee")
+
 
 #///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 <Sell>
     MDGridLayout:
         cols: 2
         rows: 1
+        md_bg_color: get_color_from_hex("#d9d9d9")
+        spacing: 2
         MDBoxLayout:
             id: menu
             orientation: "vertical"
             size_hint_x: None
-            width: int(0.185*self.parent.width)
-            md_bg_color: get_color_from_hex("#242425")
+            width: int(0.1*self.parent.width)
+            md_bg_color: get_color_from_hex("#d9d9d9")
             spacing: 2
-            Menu_Botao:
-                size_hint_y: None
-                height: 70
-                orientation: "horizontal"
-                Image:
-                    source: 'logo_extensa.png'
-                    size_hint: 0.7,0.7
-                    pos_hint: {'center_x': .5,'center_y': .5}
-                    allow_stretch: False
-                    allow_ratio: False
-                    center_x: self.parent.center_x
-                    center_y: self.parent.center_y
-
-            # BOTÃO INICIO
-            Menu_Botao:
-                size_hint_y: None
-                height: 70
-                orientation: "horizontal"
-                spacing: 0
-                on_release: root.manager.current = "Inicio"
-                MDIconButton:
-                    icon: "home"
-                    size_hint: (0.5,0.5)
-                    pos_hint: {"center_x":0.5, "center_y":0.5}
-                    theme_icon_color: "Custom"
-                    icon_color: get_color_from_hex('#FFFFFF')
-                MDLabel:
-                    markup: True
-                    size_hint: (1,1)
-                    color: get_color_from_hex('#FFFFFF')
-                    text: "[b]Inicio[/b]"
-                    halign: "center"
-                    valign: "middle"
-                    font_size: 17
-                MDIconButton:
-                    opacity: 0
-                    icon: "chevron-down"
-                    size_hint: (0.5,0.5)
-                    pos_hint: {"center_x":0.5, "center_y":0.5}
-                    theme_icon_color: "Custom"
-                    icon_color: get_color_from_hex('#FFFFFF')
-            # BOTAO VENDER
-            Menu_Botao:
-                size_hint_y: None
-                height: 70
-                orientation: "horizontal"
-                spacing: 0
-                on_release: root.manager.current = "Sell"
-                MDIconButton:
-                    icon: "cart-outline"
-                    size_hint: (0.5,0.5)
-                    pos_hint: {"center_x":0.5, "center_y":0.5}
-                    theme_icon_color: "Custom"
-                    icon_color: get_color_from_hex('#FFFFFF')
-                MDLabel:
-                    markup: True
-                    size_hint: (1,1)
-                    color: get_color_from_hex('#FFFFFF')
-                    text: "[b]Vender[/b]"
-                    halign: "center"
-                    valign: "middle"
-                    font_size: 17
-                MDIconButton:
-                    opacity: 0
-                    icon: "chevron-down"
-                    size_hint: (0.5,0.5)
-                    pos_hint: {"center_x":0.5, "center_y":0.5}
-                    theme_icon_color: "Custom"
-                    icon_color: get_color_from_hex('#FFFFFF')
-
-            # BOTÃO ESTOQUE
-            Menu_Botao:
-                size_hint_y: None
-                height: 70
-                orientation: "horizontal"
-                spacing: 0
-                on_release: root.manager.current = "Storage"
-                MDIconButton:
-                    icon: "store"
-                    size_hint: (0.5,0.5)
-                    pos_hint: {"center_x":0.5, "center_y":0.5}
-                    theme_icon_color: "Custom"
-                    icon_color: get_color_from_hex('#FFFFFF')
-                MDLabel:
-                    markup: True
-                    size_hint: (1,1)
-                    color: get_color_from_hex('#FFFFFF')
-                    text: "[b]Estoque[/b]"
-                    halign: "center"
-                    valign: "middle"
-                    font_size: 17
-                MDIconButton:
-                    opacity: 0
-                    icon: "chevron-down"
-                    size_hint: (0.5,0.5)
-                    pos_hint: {"center_x":0.5, "center_y":0.5}
-                    theme_icon_color: "Custom"
-                    icon_color: get_color_from_hex('#FFFFFF')
-            # BOTÃO ReVision
-            Menu_Botao:
-                size_hint_y: None
-                height: 70
-                orientation: "horizontal"
-                spacing: 0
-                on_release: root.manager.current = "IA"
-                MDIconButton:
-                    icon: "robot-happy"
-                    size_hint: (0.5,0.5)
-                    pos_hint: {"center_x":0.5, "center_y":0.5}
-                    theme_icon_color: "Custom"
-                    icon_color: get_color_from_hex('#FFFFFF')
-                MDLabel:
-                    markup: True
-                    size_hint: (1,1)
-                    color: get_color_from_hex('#FFFFFF')
-                    text: "[b]ReVision[/b]"
-                    halign: "center"
-                    valign: "middle"
-                    font_size: 17
-                MDIconButton:
-                    opacity: 0
-                    icon: "chevron-down"
-                    size_hint: (0.5,0.5)
-                    pos_hint: {"center_x":0.5, "center_y":0.5}
-                    theme_icon_color: "Custom"
-                    icon_color: get_color_from_hex('#FFFFFF')
-            # BOTÃO CONFIGURACOES
-            Menu_Botao:
-                elevation: 10
-                size_hint_y: None
-                height: 70
-                orientation: "horizontal"
-                spacing: 0
-                on_release: root.manager.current = "Setts"
-                MDIconButton:
-                    icon: "wrench"
-                    size_hint: (0.5,0.5)
-                    pos_hint: {"center_x":0.5, "center_y":0.5}
-                    theme_icon_color: "Custom"
-                    icon_color: get_color_from_hex('#FFFFFF')
-                MDLabel:
-                    markup: True
-                    size_hint: (1,1)
-                    color: get_color_from_hex('#FFFFFF')
-                    text: "[b]Configurações[/b]"
-                    halign: "center"
-                    valign: "middle"
-                    font_size: 17
-                MDIconButton:
-                    opacity: 0
-                    icon: "chevron-down"
-                    size_hint: (0.5,0.5)
-                    pos_hint: {"center_x":0.5, "center_y":0.5}
-                    theme_icon_color: "Custom"
-                    icon_color: get_color_from_hex('#FFFFFF')
-            Menu_Botao:
-                size_hint: (1,3)
+            Menu:
 
         #/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        # AREA LIVRE + BARRA DE MENU
         MDBoxLayout:
             orientation: 'vertical'
+            md_bg_color: get_color_from_hex("#d9d9d9")
             pos_hint: 0.5, 0.5
-            md_bg_color: get_color_from_hex('#ffffff')
-            MDLabel:
-                text: "Sell"
-                halign: "center"
+            spacing: 2
+            MDBoxLayout:
+                size_hint_y: None
+                height: 70
+                md_bg_color: get_color_from_hex("#eeeeee")
+                orientation: "horizontal"
+                padding: [20,0]
+                MDLabel:
+                    markup: True
+                    text: "Vender"
+                    font_size: 20
+                    font_name: "Roboto-Bold"
+
+            MDBoxLayout:
+                md_bg_color: get_color_from_hex("#eeeeee")
 
 #///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 <Storage>
+    recycle_view: recycle_view
+    items_box: items_box
     MDGridLayout:
         cols: 2
         rows: 1
+        md_bg_color: get_color_from_hex("#d9d9d9")
+        spacing: 2
         MDBoxLayout:
             id: menu
             orientation: "vertical"
             size_hint_x: None
-            width: int(0.185*self.parent.width)
-            md_bg_color: get_color_from_hex("#242425")
+            width: int(0.1*self.parent.width)
+            md_bg_color: get_color_from_hex("#d9d9d9")
             spacing: 2
-            Menu_Botao:
-                size_hint_y: None
-                height: 70
-                orientation: "horizontal"
-                Image:
-                    source: 'logo_extensa.png'
-                    size_hint: 0.7,0.7
-                    pos_hint: {'center_x': .5,'center_y': .5}
-                    allow_stretch: False
-                    allow_ratio: False
-                    center_x: self.parent.center_x
-                    center_y: self.parent.center_y
-
-            # BOTÃO INICIO
-            Menu_Botao:
-                size_hint_y: None
-                height: 70
-                orientation: "horizontal"
-                spacing: 0
-                on_release: root.manager.current = "Inicio"
-                MDIconButton:
-                    icon: "home"
-                    size_hint: (0.5,0.5)
-                    pos_hint: {"center_x":0.5, "center_y":0.5}
-                    theme_icon_color: "Custom"
-                    icon_color: get_color_from_hex('#FFFFFF')
-                MDLabel:
-                    markup: True
-                    size_hint: (1,1)
-                    color: get_color_from_hex('#FFFFFF')
-                    text: "[b]Inicio[/b]"
-                    halign: "center"
-                    valign: "middle"
-                    font_size: 17
-                MDIconButton:
-                    opacity: 0
-                    icon: "chevron-down"
-                    size_hint: (0.5,0.5)
-                    pos_hint: {"center_x":0.5, "center_y":0.5}
-                    theme_icon_color: "Custom"
-                    icon_color: get_color_from_hex('#FFFFFF')
-            # BOTAO VENDER
-            Menu_Botao:
-                size_hint_y: None
-                height: 70
-                orientation: "horizontal"
-                spacing: 0
-                on_release: root.manager.current = "Sell"
-                MDIconButton:
-                    icon: "cart-outline"
-                    size_hint: (0.5,0.5)
-                    pos_hint: {"center_x":0.5, "center_y":0.5}
-                    theme_icon_color: "Custom"
-                    icon_color: get_color_from_hex('#FFFFFF')
-                MDLabel:
-                    markup: True
-                    size_hint: (1,1)
-                    color: get_color_from_hex('#FFFFFF')
-                    text: "[b]Vender[/b]"
-                    halign: "center"
-                    valign: "middle"
-                    font_size: 17
-                MDIconButton:
-                    opacity: 0
-                    icon: "chevron-down"
-                    size_hint: (0.5,0.5)
-                    pos_hint: {"center_x":0.5, "center_y":0.5}
-                    theme_icon_color: "Custom"
-                    icon_color: get_color_from_hex('#FFFFFF')
-
-            # BOTÃO ESTOQUE
-            Menu_Botao:
-                size_hint_y: None
-                height: 70
-                orientation: "horizontal"
-                spacing: 0
-                on_release: root.manager.current = "Storage"
-                MDIconButton:
-                    icon: "store"
-                    size_hint: (0.5,0.5)
-                    pos_hint: {"center_x":0.5, "center_y":0.5}
-                    theme_icon_color: "Custom"
-                    icon_color: get_color_from_hex('#FFFFFF')
-                MDLabel:
-                    markup: True
-                    size_hint: (1,1)
-                    color: get_color_from_hex('#FFFFFF')
-                    text: "[b]Estoque[/b]"
-                    halign: "center"
-                    valign: "middle"
-                    font_size: 17
-                MDIconButton:
-                    opacity: 0
-                    icon: "chevron-down"
-                    size_hint: (0.5,0.5)
-                    pos_hint: {"center_x":0.5, "center_y":0.5}
-                    theme_icon_color: "Custom"
-                    icon_color: get_color_from_hex('#FFFFFF')
-            # BOTÃO ReVision
-            Menu_Botao:
-                size_hint_y: None
-                height: 70
-                orientation: "horizontal"
-                spacing: 0
-                on_release: root.manager.current = "IA"
-                MDIconButton:
-                    icon: "robot-happy"
-                    size_hint: (0.5,0.5)
-                    pos_hint: {"center_x":0.5, "center_y":0.5}
-                    theme_icon_color: "Custom"
-                    icon_color: get_color_from_hex('#FFFFFF')
-                MDLabel:
-                    markup: True
-                    size_hint: (1,1)
-                    color: get_color_from_hex('#FFFFFF')
-                    text: "[b]ReVision[/b]"
-                    halign: "center"
-                    valign: "middle"
-                    font_size: 17
-                MDIconButton:
-                    opacity: 0
-                    icon: "chevron-down"
-                    size_hint: (0.5,0.5)
-                    pos_hint: {"center_x":0.5, "center_y":0.5}
-                    theme_icon_color: "Custom"
-                    icon_color: get_color_from_hex('#FFFFFF')
-            # BOTÃO CONFIGURACOES
-            Menu_Botao:
-                elevation: 10
-                size_hint_y: None
-                height: 70
-                orientation: "horizontal"
-                spacing: 0
-                on_release: root.manager.current = "Setts"
-                MDIconButton:
-                    icon: "wrench"
-                    size_hint: (0.5,0.5)
-                    pos_hint: {"center_x":0.5, "center_y":0.5}
-                    theme_icon_color: "Custom"
-                    icon_color: get_color_from_hex('#FFFFFF')
-                MDLabel:
-                    markup: True
-                    size_hint: (1,1)
-                    color: get_color_from_hex('#FFFFFF')
-                    text: "[b]Configurações[/b]"
-                    halign: "center"
-                    valign: "middle"
-                    font_size: 17
-                MDIconButton:
-                    opacity: 0
-                    icon: "chevron-down"
-                    size_hint: (0.5,0.5)
-                    pos_hint: {"center_x":0.5, "center_y":0.5}
-                    theme_icon_color: "Custom"
-                    icon_color: get_color_from_hex('#FFFFFF')
-            Menu_Botao:
-                size_hint: (1,3)
+            Menu:
 
         #/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        # AREA LIVRE + BARRA DE MENU
         MDBoxLayout:
             orientation: 'vertical'
+            md_bg_color: get_color_from_hex("#d9d9d9")
             pos_hint: 0.5, 0.5
-            md_bg_color: get_color_from_hex('#ffffff')
-            MDLabel:
-                text: "Storage"
-                halign: "center"
+            spacing: 1
+            MDBoxLayout:
+                size_hint_y: None
+                height: 70
+                md_bg_color: get_color_from_hex("#eeeeee")
+                orientation: "horizontal"
+                padding: [20,0]
+                MDBoxLayout:
+                    md_bg_color: 0,0,0,0
+                    size_hint_x: 0.2
+                    MDLabel:
+                        markup: True
+                        text: "Estoque"
+                        font_size: 20
+                        font_name: "Roboto-Bold"
+
+                # BARRA DE BUSCA
+                MDBoxLayout:
+                    id: search_clientes_box
+                    md_bg_color: 0,0,0,0
+                    size_hint_x: 0.8
+                    pos_hint: {"center_x": .1, "center_y": .5}
+                    padding: [20,10]
+
+                    InputCapsLock:
+                        id: search_bar_clientes
+                        size_hint: None, None
+                        width: root.width_
+                        height: "30dp"
+                        pos_hint: {"center_x": .5, "center_y": .5}
+                        canvas.before:
+                            Color:
+                                rgba: get_color_from_hex('#676767')
+                            Line:
+                                width: 0.3
+                                rectangle: self.x, self.y, self.width, self.height
+
+                    MDBoxLayout:
+                        size_hint_y: None
+                        height: "30dp"
+                        md_bg_color: 1,0,0,0
+                        size_hint_x: None
+                        width: "45dp"
+                        pos_hint: {"center_x": .5, "center_y": .5}
+                        canvas.before:
+                            Color:
+                                rgba: get_color_from_hex('#3b3b3b')
+                            Line:
+                                width: 0.3
+                                rectangle: self.x, self.y, self.width, self.height
+                        MDIconButton:
+                            icon: "account-search"
+                            on_release: root.search()
+                            size_hint_y: 1
+                            size_hint_x: 1
+                            pos_hint: {"center_x": .5, "center_y": .5}
+
+                InvButton:
+                    icon: "plus"
+                    on_release: root.selecionar_fonecedores(root)
+                    text: "[b]Novo Produto[/b]"
+                    size_hint_x: 0.16
+                    pos_hint: {"center_x": .5, "center_y": .5}
+                    md_bg_color: get_color_from_hex("#323335")
+                    line_color: get_color_from_hex("#000000")
+                    theme_text_color: "Custom"
+                    text_color: get_color_from_hex("#FFFFFF")
+                    icon_color: get_color_from_hex("#FFFFFF")
+
+            MDBoxLayout:
+                md_bg_color: get_color_from_hex("#eeeeee")
+                orientation: "horizontal"
+
+                # TABELA CLIENTES
+                MDBoxLayout:
+                    md_bg_color: 0,0,0,0
+                    orientation: "vertical"
+                    MDBoxLayout:
+                        id: clientes_header
+                        orientation: "vertical"
+                        md_bg_color: get_color_from_hex("#eeeeee")
+                        size_hint_y: None
+                        height: root.height_ + 2
+                        Header_Estoque_Tabela:
+
+                    RecycleView:
+                        id: recycle_view
+                        size_hint: 1, 0.9
+                        viewclass: "Estoque"
+                        RecycleBoxLayout:
+                            id: items_box
+                            orientation: "vertical"
+                            default_size_hint: 1, None
+                            size_hint: 1, None
+                            height: self.minimum_height
+
+                # MAIS INFORMAÇÕES
+                MDBoxLayout:
+                    id: clientes_info
+                    md_bg_color: 0,0,1,0.05
+                    size_hint_x: 0.0
+                    orientation: "vertical"
+                    canvas.before:
+                        Color:
+                            rgba: get_color_from_hex('#d9d9d9')
+                        Line:
+                            width: 1.2
+                            rectangle: self.x, self.y, self.width, self.height
+
+                    # header superior
+                    MDBoxLayout:
+                        orientation: "horizontal"
+                        id: clientes_header2
+                        md_bg_color: get_color_from_hex("#eeeeee")
+                        size_hint_y: None
+                        height: root.height_ + 2
+                        canvas.before:
+                            Color:
+                                rgba: get_color_from_hex('#d9d9d9')
+                            Line:
+                                width: 1.2
+                                rectangle: self.x, self.y, self.width, self.height
+                        Label:
+                            id: label_info_storage
+                            text: ""
+                            halign: "center"
+                            valign: "middle"
+                            font_size: 15
+                            markup: True
+                            color: get_color_from_hex('#242425')
+
+                        ButtonTip_Clientes:
+                            canvas.before:
+                                Color:
+                                    rgba: get_color_from_hex('#d9d9d9')
+                                Line:
+                                    width: 1
+                                    rectangle: self.x, self.y, self.width, self.height
+
+                            on_release: app.clientes_info_close(self.parent.parent)
+                            on_press: root.ids.label_info_storage.text = ""
+                            icon: "chevron-left"
+                            icon_size: "35sp"
+                            pos_hint: {"center_x":0.5, "center_y":0.5}
+                            size_hint: (0.2,1)
+                            theme_icon_color: "Custom"
+                            icon_color: get_color_from_hex('#242425')
+                            md_bg_color: get_color_from_hex('#{}'.format(self.cor))
+
+                    MDBoxLayout:
+                        id: clientes_info_space
+                        orientation: "horizontal"
+                        md_bg_color: get_color_from_hex("#eeeeee")
+                        canvas.before:
+                            Color:
+                                rgba: get_color_from_hex('#d9d9d9')
+                            Line:
+                                width: 1.2
+                                rectangle: self.x, self.y, self.width, self.height
+                        ScrollView:
+                            id: scroll
+                            do_scroll_x: False
+                            do_scroll_y: True
+                            orientation: "vertical"
+                            size_hint: 1,1
+                            scroll_type: ["content"]
+
+                            MDBoxLayout:
+                                orientation: "vertical"
+                                size_hint_y: None
+                                height: scroll.height * 1.05
+                                MDBoxLayout:
+                                    orientation: "horizontal"
+                                    Label:
+                                        text: "ID"
+                                        halign: "center"
+                                        valign: "middle"
+                                        font_size: 15
+                                        markup: True
+                                        color: get_color_from_hex('#242425')
+                                        canvas.before:
+                                            Color:
+                                                rgba: get_color_from_hex('#676767')
+                                            Line:
+                                                width: 0.8
+                                                rectangle: self.x, self.y, self.width, self.height
+                                    Label:
+                                        text: ""
+                                        halign: "center"
+                                        valign: "middle"
+                                        font_size: 15
+                                        markup: True
+                                        color: get_color_from_hex('#242425')
+                                        canvas.before:
+                                            Color:
+                                                rgba: get_color_from_hex('#676767')
+                                            Line:
+                                                width: 0.8
+                                                rectangle: self.x, self.y, self.width, self.height
+                                        id: info_id
+
+                                MDBoxLayout:
+                                    orientation: "horizontal"
+                                    Label:
+                                        text: "CATEGORIA"
+                                        halign: "center"
+                                        valign: "middle"
+                                        font_size: 15
+                                        markup: True
+                                        color: get_color_from_hex('#242425')
+                                        canvas.before:
+                                            Color:
+                                                rgba: get_color_from_hex('#676767')
+                                            Line:
+                                                width: 0.8
+                                                rectangle: self.x, self.y, self.width, self.height
+                                    InputCapsLock:
+
+                                        id: info_categoria
+
+                                MDBoxLayout:
+                                    orientation: "horizontal"
+                                    Label:
+                                        text: "PRODUTO"
+                                        halign: "center"
+                                        valign: "middle"
+                                        font_size: 15
+                                        markup: True
+                                        color: get_color_from_hex('#242425')
+                                        canvas.before:
+                                            Color:
+                                                rgba: get_color_from_hex('#676767')
+                                            Line:
+                                                width: 0.8
+                                                rectangle: self.x, self.y, self.width, self.height
+                                    InputCapsLock:
+                                        id: info_produto
+
+                                MDBoxLayout:
+                                    orientation: "horizontal"
+                                    Label:
+                                        size_hint_x: 1.015
+                                        text: "FORNECEDOR"
+                                        halign: "center"
+                                        valign: "middle"
+                                        font_size: 15
+                                        markup: True
+                                        color: get_color_from_hex('#242425')
+                                        canvas.before:
+                                            Color:
+                                                rgba: get_color_from_hex('#676767')
+                                            Line:
+                                                width: 0.8
+                                                rectangle: self.x, self.y, self.width, self.height
+
+                                    MDBoxLayout:
+                                        Alterar_Fornecedor:
+                                            canvas.before:
+                                                Color:
+                                                    rgba: get_color_from_hex('#676767')
+                                                Line:
+                                                    width: 2
+                                                    rectangle: self.x, self.y, self.width, self.height
+                                            text: ""
+                                            id: info_fornecedor
+                                            size_hint_x: 1
+                                            md_bg_color: get_color_from_hex('#eeeeee')
+                                            size_hint_y: 1
+                                            text_color: get_color_from_hex('#000000')
+                                            line_color: get_color_from_hex('#d9d9d9')
+                                            font_size: 15
+                                            halign: "center"
+                                            theme_icon_color: "Custom"
+                                            on_release: root.mudar_fornecedor(root)
+
+
+
+
+                                MDBoxLayout:
+                                    orientation: "horizontal"
+                                    Label:
+                                        text: "ESTOQUE"
+                                        halign: "center"
+                                        valign: "middle"
+                                        font_size: 15
+                                        markup: True
+                                        color: get_color_from_hex('#242425')
+                                        canvas.before:
+                                            Color:
+                                                rgba: get_color_from_hex('#676767')
+                                            Line:
+                                                width: 0.8
+                                                rectangle: self.x, self.y, self.width, self.height
+                                    InputCapsLock:
+                                        id: info_estoque
+                                        input_filter: "int"
+
+                                MDBoxLayout:
+                                    orientation: "horizontal"
+                                    Label:
+                                        text: "ESTOQUE CRITICO"
+                                        halign: "center"
+                                        valign: "middle"
+                                        font_size: 15
+                                        markup: True
+                                        color: get_color_from_hex('#242425')
+                                        canvas.before:
+                                            Color:
+                                                rgba: get_color_from_hex('#676767')
+                                            Line:
+                                                width: 0.8
+                                                rectangle: self.x, self.y, self.width, self.height
+                                    InputCapsLock:
+                                        id: info_critico
+                                        input_filter: "int"
+                                        valign: "middle"
+
+                                MDBoxLayout:
+                                    orientation: "horizontal"
+                                    md_bg_color: 0,0,0,0
+                                MDBoxLayout:
+                                    orientation: "horizontal"
+                                    md_bg_color: 0,0,0,0
+
+
+                    Clientes_Deletar:
+                        icon: "trash-can-outline"
+                        text: "[b]Deletar Produto[/b]"
+                        font_size: 17
+                        theme_text_color: "Custom"
+                        #on_release: root.remove_client()
+                        on_release: root.confirmacao_remover_cliente(root)
+                        icon_size: "20sp"
+                        size_hint_x: 1
+                        md_bg_color: get_color_from_hex('#b92034')
+                        size_hint_y: 0.06
+                        text_color: get_color_from_hex('#eeeeee')
+                        line_color: get_color_from_hex('#d9d9d9')
+                        theme_icon_color: "Custom"
+                        icon_color: get_color_from_hex('#eeeeee')
+
+                    Clientes_Alterar:
+                        icon: "border-color"
+                        text: "[b]Alterar Informações[/b]"
+
+                        font_size: 17
+                        theme_text_color: "Custom"
+                        on_release: root.change_infos()
+                        icon_size: "20sp"
+                        size_hint_x: 1
+                        md_bg_color: get_color_from_hex('#242425')
+                        size_hint_y: 0.15
+                        text_color: get_color_from_hex('#eeeeee')
+                        line_color: get_color_from_hex('#d9d9d9')
+                        theme_icon_color: "Custom"
+                        icon_color: get_color_from_hex('#eeeeee')
 
 #///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 <IA>
     MDGridLayout:
         cols: 2
         rows: 1
+        md_bg_color: get_color_from_hex("#d9d9d9")
+        spacing: 2
         MDBoxLayout:
             id: menu
             orientation: "vertical"
             size_hint_x: None
-            width: int(0.185*self.parent.width)
-            md_bg_color: get_color_from_hex("#242425")
+            width: int(0.1*self.parent.width)
+            md_bg_color: get_color_from_hex("#d9d9d9")
             spacing: 2
-            Menu_Botao:
-                size_hint_y: None
-                height: 70
-                orientation: "horizontal"
-                Image:
-                    source: 'logo_extensa.png'
-                    size_hint: 0.7,0.7
-                    pos_hint: {'center_x': .5,'center_y': .5}
-                    allow_stretch: False
-                    allow_ratio: False
-                    center_x: self.parent.center_x
-                    center_y: self.parent.center_y
-
-            # BOTÃO INICIO
-            Menu_Botao:
-                size_hint_y: None
-                height: 70
-                orientation: "horizontal"
-                spacing: 0
-                on_release: root.manager.current = "Inicio"
-                MDIconButton:
-                    icon: "home"
-                    size_hint: (0.5,0.5)
-                    pos_hint: {"center_x":0.5, "center_y":0.5}
-                    theme_icon_color: "Custom"
-                    icon_color: get_color_from_hex('#FFFFFF')
-                MDLabel:
-                    markup: True
-                    size_hint: (1,1)
-                    color: get_color_from_hex('#FFFFFF')
-                    text: "[b]Inicio[/b]"
-                    halign: "center"
-                    valign: "middle"
-                    font_size: 17
-                MDIconButton:
-                    opacity: 0
-                    icon: "chevron-down"
-                    size_hint: (0.5,0.5)
-                    pos_hint: {"center_x":0.5, "center_y":0.5}
-                    theme_icon_color: "Custom"
-                    icon_color: get_color_from_hex('#FFFFFF')
-            # BOTAO VENDER
-            Menu_Botao:
-                size_hint_y: None
-                height: 70
-                orientation: "horizontal"
-                spacing: 0
-                on_release: root.manager.current = "Sell"
-                MDIconButton:
-                    icon: "cart-outline"
-                    size_hint: (0.5,0.5)
-                    pos_hint: {"center_x":0.5, "center_y":0.5}
-                    theme_icon_color: "Custom"
-                    icon_color: get_color_from_hex('#FFFFFF')
-                MDLabel:
-                    markup: True
-                    size_hint: (1,1)
-                    color: get_color_from_hex('#FFFFFF')
-                    text: "[b]Vender[/b]"
-                    halign: "center"
-                    valign: "middle"
-                    font_size: 17
-                MDIconButton:
-                    opacity: 0
-                    icon: "chevron-down"
-                    size_hint: (0.5,0.5)
-                    pos_hint: {"center_x":0.5, "center_y":0.5}
-                    theme_icon_color: "Custom"
-                    icon_color: get_color_from_hex('#FFFFFF')
-
-            # BOTÃO ESTOQUE
-            Menu_Botao:
-                size_hint_y: None
-                height: 70
-                orientation: "horizontal"
-                spacing: 0
-                on_release: root.manager.current = "Storage"
-                MDIconButton:
-                    icon: "store"
-                    size_hint: (0.5,0.5)
-                    pos_hint: {"center_x":0.5, "center_y":0.5}
-                    theme_icon_color: "Custom"
-                    icon_color: get_color_from_hex('#FFFFFF')
-                MDLabel:
-                    markup: True
-                    size_hint: (1,1)
-                    color: get_color_from_hex('#FFFFFF')
-                    text: "[b]Estoque[/b]"
-                    halign: "center"
-                    valign: "middle"
-                    font_size: 17
-                MDIconButton:
-                    opacity: 0
-                    icon: "chevron-down"
-                    size_hint: (0.5,0.5)
-                    pos_hint: {"center_x":0.5, "center_y":0.5}
-                    theme_icon_color: "Custom"
-                    icon_color: get_color_from_hex('#FFFFFF')
-            # BOTÃO ReVision
-            Menu_Botao:
-                size_hint_y: None
-                height: 70
-                orientation: "horizontal"
-                spacing: 0
-                on_release: root.manager.current = "IA"
-                MDIconButton:
-                    icon: "robot-happy"
-                    size_hint: (0.5,0.5)
-                    pos_hint: {"center_x":0.5, "center_y":0.5}
-                    theme_icon_color: "Custom"
-                    icon_color: get_color_from_hex('#FFFFFF')
-                MDLabel:
-                    markup: True
-                    size_hint: (1,1)
-                    color: get_color_from_hex('#FFFFFF')
-                    text: "[b]ReVision[/b]"
-                    halign: "center"
-                    valign: "middle"
-                    font_size: 17
-                MDIconButton:
-                    opacity: 0
-                    icon: "chevron-down"
-                    size_hint: (0.5,0.5)
-                    pos_hint: {"center_x":0.5, "center_y":0.5}
-                    theme_icon_color: "Custom"
-                    icon_color: get_color_from_hex('#FFFFFF')
-            # BOTÃO CONFIGURACOES
-            Menu_Botao:
-                elevation: 10
-                size_hint_y: None
-                height: 70
-                orientation: "horizontal"
-                spacing: 0
-                on_release: root.manager.current = "Setts"
-                MDIconButton:
-                    icon: "wrench"
-                    size_hint: (0.5,0.5)
-                    pos_hint: {"center_x":0.5, "center_y":0.5}
-                    theme_icon_color: "Custom"
-                    icon_color: get_color_from_hex('#FFFFFF')
-                MDLabel:
-                    markup: True
-                    size_hint: (1,1)
-                    color: get_color_from_hex('#FFFFFF')
-                    text: "[b]Configurações[/b]"
-                    halign: "center"
-                    valign: "middle"
-                    font_size: 17
-                MDIconButton:
-                    opacity: 0
-                    icon: "chevron-down"
-                    size_hint: (0.5,0.5)
-                    pos_hint: {"center_x":0.5, "center_y":0.5}
-                    theme_icon_color: "Custom"
-                    icon_color: get_color_from_hex('#FFFFFF')
-            Menu_Botao:
-                size_hint: (1,3)
+            Menu:
 
         #/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        # AREA LIVRE + BARRA DE MENU
         MDBoxLayout:
             orientation: 'vertical'
+            md_bg_color: get_color_from_hex("#d9d9d9")
             pos_hint: 0.5, 0.5
-            md_bg_color: get_color_from_hex('#ffffff')
-            MDLabel:
-                text: "IA"
-                halign: "center"
+            spacing: 2
+            MDBoxLayout:
+                size_hint_y: None
+                height: 70
+                md_bg_color: get_color_from_hex("#eeeeee")
+                orientation: "horizontal"
+                padding: [20,0]
+                MDLabel:
+                    markup: True
+                    text: "ReVision"
+                    font_size: 20
+                    font_name: "Roboto-Bold"
+
+            MDBoxLayout:
+                md_bg_color: get_color_from_hex("#eeeeee")
+
+#///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+<Clientes>
+    recycle_view: recycle_view
+    items_box: items_box
+    MDGridLayout:
+        cols: 2
+        rows: 1
+        md_bg_color: get_color_from_hex("#d9d9d9")
+        spacing: 2
+        MDBoxLayout:
+            id: menu
+            orientation: "vertical"
+            size_hint_x: None
+            width: int(0.1*self.parent.width)
+            md_bg_color: get_color_from_hex("#d9d9d9")
+            spacing: 2
+            Menu:
+
+        #/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        MDBoxLayout:
+            orientation: 'vertical'
+            md_bg_color: get_color_from_hex("#d9d9d9")
+            pos_hint: 0.5, 0.5
+            spacing: 1
+            MDBoxLayout:
+                size_hint_y: None
+                height: 70
+                md_bg_color: get_color_from_hex("#eeeeee")
+                orientation: "horizontal"
+                padding: [20,0]
+                MDBoxLayout:
+                    md_bg_color: 0,0,0,0
+                    size_hint_x: 0.2
+                    MDLabel:
+                        markup: True
+                        text: "Clientes"
+                        font_size: 20
+                        font_name: "Roboto-Bold"
+
+                # BARRA DE BUSCA
+                MDBoxLayout:
+                    id: search_clientes_box
+                    md_bg_color: 0,0,0,0
+                    size_hint_x: 0.8
+                    pos_hint: {"center_x": .1, "center_y": .5}
+                    padding: [20,10]
+
+                    InputCapsLock:
+                        id: search_bar_clientes
+                        size_hint: None, None
+                        width: root.width_
+                        height: "30dp"
+                        pos_hint: {"center_x": .5, "center_y": .5}
+                        canvas.before:
+                            Color:
+                                rgba: get_color_from_hex('#676767')
+                            Line:
+                                width: 0.3
+                                rectangle: self.x, self.y, self.width, self.height
+
+                    MDBoxLayout:
+                        size_hint_y: None
+                        height: "30dp"
+                        md_bg_color: 1,0,0,0
+                        size_hint_x: None
+                        width: "45dp"
+                        pos_hint: {"center_x": .5, "center_y": .5}
+                        canvas.before:
+                            Color:
+                                rgba: get_color_from_hex('#3b3b3b')
+                            Line:
+                                width: 0.3
+                                rectangle: self.x, self.y, self.width, self.height
+                        MDIconButton:
+                            icon: "account-search"
+                            on_release: root.search()
+                            size_hint_y: 1
+                            size_hint_x: 1
+                            pos_hint: {"center_x": .5, "center_y": .5}
+
+
+                InvButton:
+                    icon: "plus"
+                    on_release: root.novo_cliente_(root)
+                    text: "[b]Novo Cliente[/b]"
+                    pos_hint: {"center_x": .5, "center_y": .5}
+                    size_hint_x: 0.16
+                    md_bg_color: get_color_from_hex("#323335")
+                    line_color: get_color_from_hex("#000000")
+                    theme_text_color: "Custom"
+                    text_color: get_color_from_hex("#FFFFFF")
+                    icon_color: get_color_from_hex("#FFFFFF")
+
+            MDBoxLayout:
+                md_bg_color: get_color_from_hex("#eeeeee")
+                orientation: "horizontal"
+
+                # TABELA CLIENTES
+                MDBoxLayout:
+                    md_bg_color: 0,0,0,0
+                    orientation: "vertical"
+                    MDBoxLayout:
+                        id: clientes_header
+                        orientation: "vertical"
+                        md_bg_color: get_color_from_hex("#eeeeee")
+                        size_hint_y: None
+                        height: root.height_ + 2
+                        Header_Clientes_Tabela:
+
+                    RecycleView:
+                        id: recycle_view
+                        size_hint: 1, 0.9
+                        viewclass: "ListItem"
+                        RecycleBoxLayout:
+                            id: items_box
+                            orientation: "vertical"
+                            default_size_hint: 1, None
+                            size_hint: 1, None
+                            height: self.minimum_height
+
+                # MAIS INFORMAÇÕES
+                MDBoxLayout:
+                    id: clientes_info
+                    md_bg_color: 0,0,1,0.05
+                    size_hint_x: 0.0
+                    orientation: "vertical"
+                    canvas.before:
+                        Color:
+                            rgba: get_color_from_hex('#d9d9d9')
+                        Line:
+                            width: 1.2
+                            rectangle: self.x, self.y, self.width, self.height
+
+                    # header superior
+                    MDBoxLayout:
+                        orientation: "horizontal"
+                        id: clientes_header2
+                        md_bg_color: get_color_from_hex("#eeeeee")
+                        size_hint_y: None
+                        height: root.height_ + 2
+                        canvas.before:
+                            Color:
+                                rgba: get_color_from_hex('#d9d9d9')
+                            Line:
+                                width: 1.2
+                                rectangle: self.x, self.y, self.width, self.height
+                        Label:
+                            id: label_info
+                            text: ""
+                            halign: "center"
+                            valign: "middle"
+                            font_size: 15
+                            markup: True
+                            color: get_color_from_hex('#242425')
+
+                        ButtonTip_Clientes:
+                            canvas.before:
+                                Color:
+                                    rgba: get_color_from_hex('#d9d9d9')
+                                Line:
+                                    width: 1
+                                    rectangle: self.x, self.y, self.width, self.height
+
+                            on_release: app.clientes_info_close(self.parent.parent)
+                            on_press: root.ids.label_info.text = ""
+                            icon: "chevron-left"
+                            icon_size: "35sp"
+                            pos_hint: {"center_x":0.5, "center_y":0.5}
+                            size_hint: (0.2,1)
+                            theme_icon_color: "Custom"
+                            icon_color: get_color_from_hex('#242425')
+                            md_bg_color: get_color_from_hex('#{}'.format(self.cor))
+
+                    MDBoxLayout:
+                        id: clientes_info_space
+                        orientation: "horizontal"
+                        md_bg_color: get_color_from_hex("#eeeeee")
+                        canvas.before:
+                            Color:
+                                rgba: get_color_from_hex('#d9d9d9')
+                            Line:
+                                width: 1.2
+                                rectangle: self.x, self.y, self.width, self.height
+                        ScrollView:
+                            id: scroll
+                            do_scroll_x: False
+                            do_scroll_y: True
+                            orientation: "vertical"
+                            size_hint: 1,1
+                            scroll_type: ["content"]
+
+                            MDBoxLayout:
+                                orientation: "vertical"
+                                size_hint_y: None
+                                height: scroll.height * 1.05
+                                MDBoxLayout:
+                                    orientation: "horizontal"
+                                    Label:
+                                        text: "ID"
+                                        halign: "center"
+                                        valign: "middle"
+                                        font_size: 15
+                                        markup: True
+                                        color: get_color_from_hex('#242425')
+                                        canvas.before:
+                                            Color:
+                                                rgba: get_color_from_hex('#676767')
+                                            Line:
+                                                width: 0.8
+                                                rectangle: self.x, self.y, self.width, self.height
+                                    Label:
+                                        text: ""
+                                        halign: "center"
+                                        valign: "middle"
+                                        font_size: 15
+                                        markup: True
+                                        color: get_color_from_hex('#242425')
+                                        canvas.before:
+                                            Color:
+                                                rgba: get_color_from_hex('#676767')
+                                            Line:
+                                                width: 0.8
+                                                rectangle: self.x, self.y, self.width, self.height
+                                        id: info_id
+
+                                MDBoxLayout:
+                                    orientation: "horizontal"
+                                    Label:
+                                        text: "CLASSE"
+                                        halign: "center"
+                                        valign: "middle"
+                                        font_size: 15
+                                        markup: True
+                                        color: get_color_from_hex('#242425')
+                                        canvas.before:
+                                            Color:
+                                                rgba: get_color_from_hex('#676767')
+                                            Line:
+                                                width: 0.8
+                                                rectangle: self.x, self.y, self.width, self.height
+                                    Label:
+                                        text: ""
+                                        halign: "center"
+                                        valign: "middle"
+                                        font_size: 15
+                                        markup: True
+                                        color: get_color_from_hex('#242425')
+                                        canvas.before:
+                                            Color:
+                                                rgba: get_color_from_hex('#676767')
+                                            Line:
+                                                width: 0.8
+                                                rectangle: self.x, self.y, self.width, self.height
+                                        id: info_classe
+
+                                MDBoxLayout:
+                                    orientation: "horizontal"
+                                    Label:
+                                        text: "NOME"
+                                        halign: "center"
+                                        valign: "middle"
+                                        font_size: 15
+                                        markup: True
+                                        color: get_color_from_hex('#242425')
+                                        canvas.before:
+                                            Color:
+                                                rgba: get_color_from_hex('#676767')
+                                            Line:
+                                                width: 0.8
+                                                rectangle: self.x, self.y, self.width, self.height
+                                    InputCapsLock:
+                                        id: info_nome
+
+                                MDBoxLayout:
+                                    orientation: "horizontal"
+                                    Label:
+                                        text: "TELEFONE"
+                                        halign: "center"
+                                        valign: "middle"
+                                        font_size: 15
+                                        markup: True
+                                        color: get_color_from_hex('#242425')
+                                        canvas.before:
+                                            Color:
+                                                rgba: get_color_from_hex('#676767')
+                                            Line:
+                                                width: 0.8
+                                                rectangle: self.x, self.y, self.width, self.height
+                                    TextInput:
+                                        id: info_telefone
+                                        input_filter: "int"
+
+                                MDBoxLayout:
+                                    orientation: "horizontal"
+                                    Label:
+                                        text: "EMAIL"
+                                        halign: "center"
+                                        valign: "middle"
+                                        font_size: 15
+                                        markup: True
+                                        color: get_color_from_hex('#242425')
+                                        canvas.before:
+                                            Color:
+                                                rgba: get_color_from_hex('#676767')
+                                            Line:
+                                                width: 0.8
+                                                rectangle: self.x, self.y, self.width, self.height
+                                    TextInput:
+                                        id: info_email
+
+                                MDBoxLayout:
+                                    orientation: "horizontal"
+                                    Label:
+                                        text: "CPF/CNPJ"
+                                        halign: "center"
+                                        valign: "middle"
+                                        font_size: 15
+                                        markup: True
+                                        color: get_color_from_hex('#242425')
+                                        canvas.before:
+                                            Color:
+                                                rgba: get_color_from_hex('#676767')
+                                            Line:
+                                                width: 0.8
+                                                rectangle: self.x, self.y, self.width, self.height
+                                    InputCapsLock:
+                                        id: info_cpf
+
+                                MDBoxLayout:
+                                    orientation: "horizontal"
+                                    Label:
+                                        text: "ENDEREÇO"
+                                        halign: "center"
+                                        valign: "middle"
+                                        font_size: 15
+                                        markup: True
+                                        color: get_color_from_hex('#242425')
+                                        canvas.before:
+                                            Color:
+                                                rgba: get_color_from_hex('#676767')
+                                            Line:
+                                                width: 0.8
+                                                rectangle: self.x, self.y, self.width, self.height
+                                    InputCapsLock:
+                                        id: info_endereco
+
+                                MDBoxLayout:
+                                    orientation: "horizontal"
+                                    Label:
+                                        text: "BAIRRO"
+                                        halign: "center"
+                                        valign: "middle"
+                                        font_size: 15
+                                        markup: True
+                                        color: get_color_from_hex('#242425')
+                                        canvas.before:
+                                            Color:
+                                                rgba: get_color_from_hex('#676767')
+                                            Line:
+                                                width: 0.8
+                                                rectangle: self.x, self.y, self.width, self.height
+                                    InputCapsLock:
+                                        id: info_bairro
+
+                                MDBoxLayout:
+                                    orientation: "horizontal"
+                                    Label:
+                                        text: "CEP"
+                                        halign: "center"
+                                        valign: "middle"
+                                        font_size: 15
+                                        markup: True
+                                        color: get_color_from_hex('#242425')
+                                        canvas.before:
+                                            Color:
+                                                rgba: get_color_from_hex('#676767')
+                                            Line:
+                                                width: 0.8
+                                                rectangle: self.x, self.y, self.width, self.height
+                                    InputCapsLock:
+                                        id: info_cep
+                                        input_filter: "int"
+
+                                MDBoxLayout:
+                                    orientation: "horizontal"
+                                    Label:
+                                        text: "MUNICÍPIO"
+                                        halign: "center"
+                                        valign: "middle"
+                                        font_size: 15
+                                        markup: True
+                                        color: get_color_from_hex('#242425')
+                                        canvas.before:
+                                            Color:
+                                                rgba: get_color_from_hex('#676767')
+                                            Line:
+                                                width: 0.8
+                                                rectangle: self.x, self.y, self.width, self.height
+                                    InputCapsLock:
+                                        id: info_municipio
+
+                                MDBoxLayout:
+                                    orientation: "horizontal"
+                                    Label:
+                                        text: "ESTADO"
+                                        halign: "center"
+                                        valign: "middle"
+                                        font_size: 15
+                                        markup: True
+                                        color: get_color_from_hex('#242425')
+                                        canvas.before:
+                                            Color:
+                                                rgba: get_color_from_hex('#676767')
+                                            Line:
+                                                width: 0.8
+                                                rectangle: self.x, self.y, self.width, self.height
+                                    InputCapsLock:
+                                        id: info_estado
+
+
+                    Clientes_Deletar:
+                        icon: "trash-can-outline"
+                        text: "[b]Deletar Cliente[/b]"
+                        font_size: 17
+                        theme_text_color: "Custom"
+                        #on_release: root.remove_client()
+                        on_release: root.confirmacao_remover_cliente(root)
+                        icon_size: "20sp"
+                        size_hint_x: 1
+                        md_bg_color: get_color_from_hex('#b92034')
+                        size_hint_y: 0.06
+                        text_color: get_color_from_hex('#eeeeee')
+                        line_color: get_color_from_hex('#d9d9d9')
+                        theme_icon_color: "Custom"
+                        icon_color: get_color_from_hex('#eeeeee')
+
+                    Clientes_Alterar:
+                        icon: "border-color"
+                        text: "[b]Alterar Informações[/b]"
+
+                        font_size: 17
+                        theme_text_color: "Custom"
+                        on_release: root.change_infos()
+                        icon_size: "20sp"
+                        size_hint_x: 1
+                        md_bg_color: get_color_from_hex('#242425')
+                        size_hint_y: 0.15
+                        text_color: get_color_from_hex('#eeeeee')
+                        line_color: get_color_from_hex('#d9d9d9')
+                        theme_icon_color: "Custom"
+                        icon_color: get_color_from_hex('#eeeeee')
+
