@@ -17,6 +17,7 @@
         id: check
         group: "check"
 
+# USADO PARA ALTERAR O FORNECEDOR DE UM PRODUTO JÁ CADASTRADO
 <Fornecedores>
     recycle_view: recycle_view
     items_box: items_box
@@ -139,8 +140,299 @@
                         size_hint: 1, None
                         height: self.minimum_height
 
+# USADO PARA CRIAR UM NOVO PRODUTO
+<Fornecedores2>
+    recycle_view: recycle_view
+    items_box: items_box
+    orientation: "vertical"
+    size_hint_y: None
+    height: dp(400)
+    spacing: 10
+
+    MDBoxLayout:
+        orientation: 'vertical'
+        md_bg_color: 1,0,0,0
+        pos_hint: {"center_x":0.5, "center_y": 0.5}
+        size: self.parent.size
+        GridLayout:
+            rows: 2
+            cols:1
+            spacing: 10
+
+            # HEADER SUPERIOR COM NOMES DAS TABELAS E BARRA DE BUSCA
+            MDBoxLayout:
+                orientation: "vertical"
+                size_hint_y: 0.25
+                MDBoxLayout:
+                    size_hint_y: 0.2
+                    MDBoxLayout:
+                        size_hint_x:0.8
+                        orientation: "horizontal"
+                        Label:
+                            text: "ID"
+                            halign: "center"
+                            valign: "middle"
+                            font_size: 15
+                            markup: True
+                            color: get_color_from_hex('#242425')
+                            canvas.before:
+                                Color:
+                                    rgba: get_color_from_hex('#676767')
+                                Line:
+                                    width: 0.8
+                                    rectangle: self.x, self.y, self.width, self.height
+
+                    MDBoxLayout:
+                        orientation: "horizontal"
+                        size_hint_x: 1.8
+                        Label:
+                            text: "FORNECEDOR"
+                            halign: "center"
+                            valign: "middle"
+                            font_size: 15
+                            markup: True
+                            color: get_color_from_hex('#242425')
+                            canvas.before:
+                                Color:
+                                    rgba: get_color_from_hex('#676767')
+                                Line:
+                                    width: 0.8
+                                    rectangle: self.x, self.y, self.width, self.height
+
+                    MDBoxLayout:
+                        orientation: "horizontal"
+                        Label:
+                            text: "-"
+                            halign: "center"
+                            valign: "middle"
+                            font_size: 15
+                            markup: True
+                            color: get_color_from_hex('#242425')
+                            canvas.before:
+                                Color:
+                                    rgba: get_color_from_hex('#676767')
+                                Line:
+                                    width: 0.8
+                                    rectangle: self.x, self.y, self.width, self.height
+                MDBoxLayout:
+                    id: search_clientes_box
+                    md_bg_color: 0,0,0,0
+                    size_hint: (1,0.2)
+                    InputCapsLock:
+                        id: search_bar_fornecedores
+                        size_hint: 2.61, 1
+                        height: "30dp"
+                        pos_hint: {"center_x": .5, "center_y": .5}
+                        canvas.before:
+                            Color:
+                                rgba: get_color_from_hex('#676767')
+                            Line:
+                                width: 0.3
+                                rectangle: self.x, self.y, self.width, self.height
+                    MDBoxLayout:
+                        md_bg_color: 1,0,0,0
+                        width: "45dp"
+                        pos_hint: {"center_x": .5, "center_y": .5}
+                        canvas.before:
+                            Color:
+                                rgba: get_color_from_hex('#3b3b3b')
+                            Line:
+                                width: 0.3
+                                rectangle: self.x, self.y, self.width, self.height
+                        MDIconButton:
+                            on_release: root.search_fornecedor(root.ids.search_bar_fornecedores.text)
+                            icon: "account-search"
+                            size_hint_y: 1
+                            size_hint_x: 1
+                            pos_hint: {"center_x": .5, "center_y": .5}
+
+            MDBoxLayout:
+                orientation: 'vertical'
+                md_bg_color: 1,0,0,0
+                size_hint: (1,1)
+                spacing: 5
+
+                RecycleView:
+                    id: recycle_view
+                    size_hint: 1, 0.9
+                    viewclass: "Fornecedores_2"
+                    RecycleBoxLayout:
+                        id: items_box
+                        orientation: "vertical"
+                        default_size_hint: 1, None
+                        size_hint: 1, None
+                        height: self.minimum_height
 
 
+<Conteudo_NovoProduto>
+    orientation: "vertical"
+    size_hint_y: None
+    height: dp(300)
+    spacing: 10
+    MDBoxLayout:
+        orientation: 'vertical'
+        md_bg_color: 1,0,0,0
+        pos_hint: {"center_x":0.5, "center_y": 0.5}
+        size: self.parent.size
+        GridLayout:
+            rows: 2
+            cols:1
+            spacing: 10
+            MDBoxLayout:
+                orientation: 'vertical'
+                md_bg_color: 1,0,0,0
+                size_hint: (1,1)
+                spacing: 5
+
+                MDBoxLayout:
+                    md_bg_color: get_color_from_hex('#eeeeee')
+                    orientation: "horizontal"
+
+                    MDBoxLayout:
+                        size_hint_x: 0.627
+                        Label:
+                            text: "[b]FORNECEDOR[/b]"
+                            halign: "center"
+                            valign: "middle"
+                            font_size: 15
+                            markup: True
+                            color: get_color_from_hex('#323335')
+                            canvas.before:
+                                Color:
+                                    rgba: get_color_from_hex('#323335')
+                                Line:
+                                    width: 0.8
+                                    rectangle: self.x, self.y, self.width, self.height
+
+                    MDBoxLayout:
+                        Alterar_Fornecedor:
+                            canvas.before:
+                                Color:
+                                    rgba: get_color_from_hex('#000000')
+                                Line:
+                                    width: 1.6
+                                    rectangle: self.x, self.y, self.width, self.height
+                            text: "[b]SELECIONAR[/b]"
+                            id: fornecedor_novo
+                            md_bg_color: get_color_from_hex('#eeeeee')
+                            size_hint: (1,1)
+                            text_color: get_color_from_hex('#323335')
+                            line_color: get_color_from_hex('#323335')
+                            font_size: 15
+                            halign: "center"
+                            theme_icon_color: "Custom"
+                            on_release: app.root.get_screen("Storage").selecionar_fonecedores2(root)
+
+                MDBoxLayout:
+                    md_bg_color: get_color_from_hex('#eeeeee')
+                    orientation: "horizontal"
+                    Label:
+                        text: "[b]CATEGORIA[/b]"
+                        halign: "center"
+                        valign: "middle"
+                        font_size: 15
+                        markup: True
+                        color: get_color_from_hex('#323335')
+                        canvas.before:
+                            Color:
+                                rgba: get_color_from_hex('#323335')
+                            Line:
+                                width: 0.8
+                                rectangle: self.x, self.y, self.width, self.height
+                    InputCapsLock:
+                        size_hint_x: 1.6
+                        id: new_product_categoria
+                        font_size: 17
+                        canvas.before:
+                            Color:
+                                rgba: get_color_from_hex('#323335')
+                            Line:
+                                width: 0.8
+                                rectangle: self.x, self.y, self.width, self.height
+
+                MDBoxLayout:
+                    md_bg_color: get_color_from_hex('#eeeeee')
+                    orientation: "horizontal"
+                    Label:
+                        text: "[b]PRODUTO[/b]"
+                        halign: "center"
+                        valign: "middle"
+                        font_size: 15
+                        markup: True
+                        color: get_color_from_hex('#323335')
+                        canvas.before:
+                            Color:
+                                rgba: get_color_from_hex('#323335')
+                            Line:
+                                width: 0.8
+                                rectangle: self.x, self.y, self.width, self.height
+                    InputCapsLock:
+                        size_hint_x: 1.6
+                        id: new_product_produto
+                        font_size: 17
+                        canvas.before:
+                            Color:
+                                rgba: get_color_from_hex('#323335')
+                            Line:
+                                width: 0.8
+                                rectangle: self.x, self.y, self.width, self.height
+
+                MDBoxLayout:
+                    md_bg_color: get_color_from_hex('#eeeeee')
+                    orientation: "horizontal"
+                    Label:
+                        text: "[b]QUANTIDADE[/b]"
+                        halign: "center"
+                        valign: "middle"
+                        font_size: 15
+                        markup: True
+                        color: get_color_from_hex('#323335')
+                        canvas.before:
+                            Color:
+                                rgba: get_color_from_hex('#323335')
+                            Line:
+                                width: 0.8
+                                rectangle: self.x, self.y, self.width, self.height
+                    TextInput:
+                        id: new_product_quantidade
+                        input_filter: "int"
+                        font_size: 30
+                        size_hint_x: 1.6
+                        canvas.before:
+                            Color:
+                                rgba: get_color_from_hex('#323335')
+                            Line:
+                                width: 0.8
+                                rectangle: self.x, self.y, self.width, self.height
+
+
+                MDBoxLayout:
+                    md_bg_color: get_color_from_hex('#eeeeee')
+                    orientation: "horizontal"
+                    Label:
+                        text: "[b]QUANTIDADE CRITICA[/b]"
+                        halign: "center"
+                        valign: "middle"
+                        font_size: 15
+                        markup: True
+                        color: get_color_from_hex('#323335')
+                        canvas.before:
+                            Color:
+                                rgba: get_color_from_hex('#323335')
+                            Line:
+                                width: 0.8
+                                rectangle: self.x, self.y, self.width, self.height
+                    TextInput:
+                        id: new_product_critico
+                        input_filter: "int"
+                        font_size: 30
+                        size_hint_x: 1.6
+                        canvas.before:
+                            Color:
+                                rgba: get_color_from_hex('#323335')
+                            Line:
+                                width: 0.8
+                                rectangle: self.x, self.y, self.width, self.height
 
 
 <Conteudo_CriarNovaMateria>
@@ -405,6 +697,76 @@
             markup: True
             color: get_color_from_hex('#242425')
 
+<Fornecedores_2@BoxLayout>:
+    orientation: "horizontal"
+    size_hint: 1, None
+    height: 1
+    id_: ''
+    fornecedor_: ''
+    md_bg_color: 0,0,0,0
+
+    BoxLayout:
+        padding: 10
+        size_hint_x: 0.8
+        canvas.before:
+            Color:
+                rgba: get_color_from_hex('#323335')
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+        orientation: "horizontal"
+
+        Label:
+            font_size: 14
+            text: root.id_
+            size_hint_x: 1
+            text_size: self.size
+            valign: "middle"
+            halign: "center"
+            markup: True
+            color: get_color_from_hex('#242425')
+
+    BoxLayout:
+        size_hint_x: 1.8
+        padding: 10
+        canvas.before:
+            Color:
+                rgba: get_color_from_hex('#323335')
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+        Label:
+            font_size: 14
+            text: root.fornecedor_
+            size_hint_x: 1
+            text_size: self.size
+            valign: "middle"
+            halign: "center"
+            markup: True
+            color: get_color_from_hex('#242425')
+
+    BoxLayout:
+        canvas.before:
+            Color:
+                rgba: get_color_from_hex('#d9d9d9')
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+
+        FornecedoresButton:
+            icon: "plus"
+            on_release: app.root.get_screen("Storage").NovoProdutoSelecionar_fornecedor(root, "novo_produto", root.id_, root.fornecedor_)
+            on_release:
+            text: "[b]Selecionar[/b]"
+            pos_hint: {"center_x": .5, "center_y": .5}
+            md_bg_color: get_color_from_hex("#323335")
+            line_color: get_color_from_hex("#000000")
+            size_hint: (1,1)
+            theme_text_color: "Custom"
+            text_color: get_color_from_hex("#FFFFFF")
+            icon_color: get_color_from_hex("#FFFFFF")
+
+
 <Fornecedores_@BoxLayout>:
     orientation: "horizontal"
     size_hint: 1, None
@@ -463,7 +825,7 @@
 
         FornecedoresButton:
             icon: "plus"
-            on_release: app.root.get_screen("Storage").mudar_fornecedor(root, root.fornecedor_)
+            on_release: app.root.get_screen("Storage").mudar_fornecedor(root, "alterar_fornecedor", root.fornecedor_)
             text: "[b]Selecionar[/b]"
             pos_hint: {"center_x": .5, "center_y": .5}
             md_bg_color: get_color_from_hex("#323335")
@@ -1002,7 +1364,7 @@ WindowManager:
 
                 InvButton:
                     icon: "plus"
-                    on_release: root.selecionar_fonecedores(root)
+                    on_release: root.novo_produto_(root)
                     text: "[b]Novo Produto[/b]"
                     size_hint_x: 0.16
                     pos_hint: {"center_x": .5, "center_y": .5}
@@ -1216,7 +1578,7 @@ WindowManager:
                                             font_size: 15
                                             halign: "center"
                                             theme_icon_color: "Custom"
-                                            on_release: root.mudar_fornecedor(root)
+                                            on_release: root.mudar_fornecedor(root, "open")
 
 
 

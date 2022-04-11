@@ -118,20 +118,20 @@ class Clientes_():
 class Estoque_():
 	def __init__(self):
 		read_or_new_pickle(path="estoque.p", default=pd.DataFrame(
-			data={"CATEGORIA": [], "PRODUTO": [], "FORNECEDOR": [], "QUANTIDADE": [], "ESTOQUE_CRITICO": [], "CLASSE": [], "TELEFONE": []}))
+			data={"CATEGORIA": [], "PRODUTO": [], "FORNECEDOR": [], "QUANTIDADE": [], "ESTOQUE_CRITICO": [], "FORNECEDOR_ID": [], "FORNECEDOR_TELEFONE": []}))
 
 		self.database = pickle.load((open("estoque.p", "rb")))
 
 	def load(self):
 		self.database = pickle.load((open("estoque.p", "rb")))
 
-	def add_data(self, categoria="", produto="", fornecedor="", quantidade="", estoque_critico="", classe="", telefone=""):
+	def add_data(self, categoria="", produto="", fornecedor="", quantidade="", estoque_critico="", fornecedor_id="", fornecedor_telefone=""):
 		self.new_id = 1
 		try:
 			self.new_id = np.array(self.database.index.values).max() + 1
 		except ValueError: pass
 
-		new_row = [categoria, produto, fornecedor, quantidade, estoque_critico, classe, telefone]
+		new_row = [categoria, produto, fornecedor, quantidade, estoque_critico, fornecedor_id, fornecedor_telefone]
 		self.database = self.database.append(pd.Series(new_row, index=self.database.columns, name = self.new_id))
 		pickle.dump(self.database, open("estoque.p", "wb"))
 
@@ -768,6 +768,10 @@ class Clientes(Screen):
 				self.ids.recycle_view.data.append({'id_': str(ids[i]), 'classe_': str(classes[i]), 'nome_': str(nomes[i]), 'telefone_': str(telefones[i])})
 
 
+
+
+
+
 class Storage(Screen):
 
 	class Classes_Spinner(Spinner):
@@ -791,6 +795,7 @@ class Storage(Screen):
 
 	# FORNECEDORES- FUNÇÕES DE SELECIONAR | FECHAR | ALTERAR
 	selecionar_fonecedor = None
+	selecionar_fonecedor2 = None
 	class Fornecedores(MDFloatLayout, HoverBehavior):
 		def __init__(self, **kwargs):
 			super().__init__(**kwargs)
@@ -835,6 +840,69 @@ class Storage(Screen):
 					# ATUALIZAR ITEMS
 					for i in range(len(data_found.index.values)):
 						self.ids.recycle_view.data.append({'id_': str(data_found.index.values[i]),'fornecedor_': str(data_found["NOME"].values[i])})
+	class Fornecedores2(MDFloatLayout, HoverBehavior):
+		def __init__(self, **kwargs):
+			super().__init__(**kwargs)
+			fornecedores_only = Clientes_()
+			fornecedores_only = fornecedores_only.database.loc[fornecedores_only.database["CLASSE"]=='FORNECEDOR']
+			for i in range(len(fornecedores_only)):
+				self.ids.recycle_view.data.append({'id_': str(fornecedores_only.index.values[i]), 'fornecedor_': str(fornecedores_only["NOME"].values[i])})
+
+		def refresh_data(self):
+			self.ids.recycle_view.data = []
+			fornecedores_only = Clientes_()
+			fornecedores_only = fornecedores_only.database.loc[fornecedores_only.database["CLASSE"] == 'FORNECEDOR']
+			for i in range(len(fornecedores_only)):
+				self.ids.recycle_view.data.append({'id_': str(fornecedores_only.index.values[i]),'fornecedor_': str(fornecedores_only["NOME"].values[i])})
+
+		def search_fornecedor(self, string):
+			fornecedores_search = Clientes_()
+			search_for = self.ids.search_bar_fornecedores.text
+			search_for = ' '.join(search_for.split()).upper()
+			data_found = fornecedores_search.search_item(search_for)
+			try:
+				data_found = data_found.loc[data_found["CLASSE"] == 'FORNECEDOR']
+			except AttributeError: pass
+
+			if search_for == "":
+				self.ids.recycle_view.data = []
+				# ATUALIZAR ITEMS
+				self.ids.recycle_view.data = []
+				fornecedores_only = Clientes_()
+				fornecedores_only = fornecedores_only.database.loc[fornecedores_only.database["CLASSE"] == 'FORNECEDOR']
+				for i in range(len(fornecedores_only)):
+					self.ids.recycle_view.data.append({'id_': str(fornecedores_only.index.values[i]),'fornecedor_': str(fornecedores_only["NOME"].values[i])})
+
+			else:
+				if len(data_found) == 0:
+					toast(f"Atenção: Nenhum Resultado Encontrado", background=get_color_from_hex('#b92034'))
+					self.ids.recycle_view.data = []
+
+				else:
+					self.ids.recycle_view.data = []
+					toast(f"Resultados Encontrados: {len(data_found)}", background=get_color_from_hex('#0b9b53'))
+					# ATUALIZAR ITEMS
+					for i in range(len(data_found.index.values)):
+						self.ids.recycle_view.data.append({'id_': str(data_found.index.values[i]),'fornecedor_': str(data_found["NOME"].values[i])})
+	def selecionar_fonecedores2(self, root, *args):
+		if not self.selecionar_fonecedor2:
+			self.selecionar_fonecedor2 = MDDialog(
+				title=f'[color=#323335]Fornecedores[/color]',
+				md_bg_color=get_color_from_hex('#eeeeee'),
+				type="custom",
+				auto_dismiss=False,
+				content_cls=self.Fornecedores2(),
+				buttons=[
+					MDFlatButton(
+						text=f"[color=#323335][b]CANCELAR[/color][/b]",
+						theme_text_color="Custom",
+						on_release=self.close_fornecedores2)])
+		self.selecionar_fonecedor2.open()
+		self.selecionar_fonecedor2.on_open = self.atualizar_fornecedores2
+	def atualizar_fornecedores2(self, *args):
+		self.selecionar_fonecedor2.content_cls.refresh_data()
+	def close_fornecedores2(self, obj):
+		self.selecionar_fonecedor2.dismiss()
 	def selecionar_fonecedores(self, root, *args):
 		if not self.selecionar_fonecedor:
 			self.selecionar_fonecedor = MDDialog(
@@ -857,17 +925,87 @@ class Storage(Screen):
 	def clientes_info_close(self, widget, *args):
 		animate = Animation(size_hint_x = 0.0, duration=0.05)
 		animate.start(widget)
-	def mudar_fornecedor(self, root, fornecedor=""):
-
+	def mudar_fornecedor(self, root, modo, fornecedor=""):
 		# USADO DENTRO DO DIALOG - ALTERAR O FORNECEDOR DO MEU ITEM
-		if fornecedor != "":
+		if fornecedor != "" and modo == "alterar_fornecedor":
 			self.ids.info_fornecedor.text = str(fornecedor)
 			toast("Fornecedor Alterado com Sucesso", background=get_color_from_hex('#0b9b53'))
 			self.selecionar_fonecedor.dismiss()
+			self.change_infos()
 
 		# ABRIR DIALOG - USADO AO CLICAR NO BOTÃO DE FORNECEDOR EM MAIS INFO
-		else:
+		if fornecedor == "" and modo == "open":
 			self.selecionar_fonecedores(root)
+
+	def auto_size(self, string):
+		if len(string) > 14:
+			return string[0:14] + "..."
+		else:
+			return string
+
+	def NovoProdutoSelecionar_fornecedor(self, root, modo, id, fornecedor=""):
+		# USADO DENTRO DO DIALOG - ALTERAR O FORNECEDOR DO MEU ITEM
+		if fornecedor != "" and modo == "novo_produto":
+			fornecedor_short = self.auto_size(fornecedor)
+			self.fornecedor_to_add = fornecedor
+			self.fornecedor_id = id
+
+			self.novo_produto.content_cls.ids.fornecedor_novo.text = f"[b]{fornecedor_short}[/b]"
+			self.selecionar_fonecedor2.dismiss()
+
+	def AdicionarNovoProduto(self, root, *args):
+		try:
+			all_fornecedores = Clientes_()
+			all_fornecedores = all_fornecedores.database
+
+			id_fornecedor = self.fornecedor_id
+			fornecedor = self.fornecedor_to_add
+			categoria = self.novo_produto.content_cls.ids.new_product_categoria.text
+			produto = self.novo_produto.content_cls.ids.new_product_produto.text
+			quantidade = self.novo_produto.content_cls.ids.new_product_quantidade.text
+			self.valor_critico = self.novo_produto.content_cls.ids.new_product_critico.text
+
+			categoria = ' '.join(categoria.split()).upper()
+			produto = ' '.join(produto.split()).upper()
+			quantidade = ' '.join(quantidade.split()).upper()
+
+			if fornecedor == "" or categoria == "" or quantidade == "" or fornecedor == "SELECIONAR":
+				toast("Atenção: Todos os Campos Devem ser Preenchidos", background=get_color_from_hex('#b92034'))
+
+			else:
+				if self.valor_critico == "":
+					self.valor_critico = str(int(0.25*float(quantidade)))
+
+				if self.valor_critico != "":
+					self.valor_critico = self.valor_critico
+
+				self.novo_produto.content_cls.ids.fornecedor_novo.text = "SELECIONAR"
+				self.novo_produto.content_cls.ids.new_product_categoria.text = ""
+				self.novo_produto.content_cls.ids.new_product_produto.text = ""
+				self.novo_produto.content_cls.ids.new_product_quantidade.text = ""
+				self.novo_produto.content_cls.ids.new_product_critico.text = ""
+
+				self.novo_produto.dismiss()
+
+				estoque_critico = self.valor_critico
+				telefone_fornecedor = all_fornecedores.loc[all_fornecedores["CLASSE"] == 'FORNECEDOR']["TELEFONE"][int(id_fornecedor)]
+				self.estoque.add_data(categoria, produto, fornecedor, quantidade, estoque_critico, id_fornecedor, telefone_fornecedor)
+
+				toast("Produto Adicionado com Sucesso", background=get_color_from_hex('#0b9b53'))
+				self.ids.recycle_view.data = []
+				for i in range(len(self.estoque.database.index.values)):
+					ids = self.estoque.database.index.values
+					categorias = self.estoque.database["CATEGORIA"].values
+					produtos = self.estoque.database["PRODUTO"].values
+					fornecedores = self.estoque.database["FORNECEDOR"].values
+					quantidades = self.estoque.database["QUANTIDADE"].values
+					self.ids.recycle_view.data.append(
+						{'id_': str(ids[i]), 'categoria_': str(categorias[i]), 'nome_': str(produtos[i]), 'fornecedor_': str(fornecedores[i]), 'quantidade_': str(quantidades[i])})
+
+
+
+		except AttributeError:
+			toast("Atenção: Todos os Campos Devem ser Preenchidos", background=get_color_from_hex('#b92034'))
 
 
 	# BARRA DE BUSCA
@@ -909,61 +1047,32 @@ class Storage(Screen):
 					self.ids.recycle_view.data.append(
 						{'id_': str(ids[i]), 'categoria_': str(categorias[i]), 'nome_': str(produtos[i]),  'fornecedor_': str(fornecedores[i]), 'quantidade_': str(quantidades[i])})
 
-	# DIALOG CRIAR NOVO CLIENTE
-	class Conteudo_CriarNovaMateria(MDFloatLayout, HoverBehavior):
+	# DIALOG CRIAR NOVO PRODUTO
+	class Conteudo_NovoProduto(MDFloatLayout, HoverBehavior):
 		cor_aplicativo = '686fa3'
 		cor_widget = 'eef2fe'
 		simulado_name_dynamic = StringProperty('')
-	novo_cliente = None
-	def novo_cliente_(self, root, *args):
-		if not self.novo_cliente:
-			self.novo_cliente = MDDialog(
-					title=f'[color=#323335]Adicionar Novo Cliente[/color]',
+	novo_produto = None
+	def novo_produto_(self, root, *args):
+		if not self.novo_produto:
+			self.novo_produto = MDDialog(
+					title=f'[color=#323335]Novo Produto[/color]',
 					md_bg_color=get_color_from_hex('#eeeeee'),
-
 					type="custom",
 					auto_dismiss=True,
-					content_cls=self.Conteudo_CriarNovaMateria(),
+					content_cls=self.Conteudo_NovoProduto(),
 					buttons=[
 						MDFlatButton(
 							text=f"[color=#323335][b]CANCELAR[/color][/b]",
 							theme_text_color="Custom",
 							on_release=self.close_),
 						MDFlatButton(
-							text=f"[color=#323335][b]ADICIONAR CLIENTE[/color][/b]",
+							text=f"[color=#323335][b]ADICIONAR PRODUTO[/color][/b]",
 							theme_text_color="Custom",
-							on_release=root.cliente_addFunction)])
-		self.novo_cliente.open()
+							on_release=root.AdicionarNovoProduto)])
+		self.novo_produto.open()
 	def close_(self, obj):
-		self.novo_cliente.dismiss()
-	def cliente_addFunction(self, root, *args):
-		classe = ' '.join(self.novo_cliente.content_cls.ids.spinnerClasses.text.split()).upper()
-		nome = ' '.join(self.novo_cliente.content_cls.ids.info_add_nome.text.split()).upper()
-		telefone = ' '.join(self.novo_cliente.content_cls.ids.info_add_telefone.text.split()).upper()
-
-		verificador = self.clientes.data_info(id=0, nome=nome, classe=classe, telefone=telefone)
-
-		if classe == "" or nome == "" or telefone == "" or classe == "SELECIONAR":
-			toast(f"Atenção: Todos os Campos Devem ser Preenchidos",background=get_color_from_hex('#b92034'))
-
-		else:
-			if len(verificador) == 0:
-				self.novo_cliente.content_cls.ids.info_add_nome.text = ""
-				self.novo_cliente.content_cls.ids.info_add_telefone.text = ""
-
-				self.clientes.add_data(nome=nome, classe=classe, telefone=telefone)
-
-				self.ids.recycle_view.data = []
-				toast("Cliente Adicionado com Sucesso", background=get_color_from_hex('#0b9b53'))
-				# ATUALIZAR ITEMS
-				for i in range(len(self.clientes.database.index.values)):
-					ids = self.clientes.database.index.values
-					classes = self.clientes.database["CLASSE"].values
-					nomes = self.clientes.database["NOME"].values
-					telefones = self.clientes.database["TELEFONE"].values
-					self.ids.recycle_view.data.append({'id_': str(ids[i]), 'classe_': str(classes[i]), 'nome_': str(nomes[i]),'telefone_': str(telefones[i])})
-			else:
-				toast(f"ATENÇÃO: JÁ EXISTE UM {classe} CHAMADO {nome} COM O TELEFONE {telefone}", background=get_color_from_hex('#b92034'))
+		self.novo_produto.dismiss()
 
 
 	# DIALOG DE CONFIRMAR REMOÇÃO CLIENTE
