@@ -799,13 +799,13 @@ class Storage(Screen):
 	height_ = NumericProperty(72.11)
 	width_ = Window.width * 0.4947584187408493 * 1.707
 
-	clientes = Clientes_()
-	estoque = Estoque_()
-
 	fornecedor_id = ""
 	fornecedor_to_add = "SELECIONAR"
 
-	# ALTERAR FORNECEDOR A PARTIR DO MENU LATERAL DIREITO DE INFORMAÇÕES
+	clientes = Clientes_()
+	estoque = Estoque_()
+
+	# ALTERAR FORNECEDOR ATRAVÉS DO MENU DE MAIS INFORMAÇÕES
 	selecionar_fonecedor2 = None
 	class Fornecedores2(MDFloatLayout, HoverBehavior):
 		def __init__(self, **kwargs):
@@ -1003,6 +1003,12 @@ class Storage(Screen):
 
 			self.novo_produto.content_cls.ids.fornecedor_novo.text = f"[b]{fornecedor_short}[/b]"
 			self.selecionar_fonecedor2.dismiss()
+	def auto_size(self, string):
+		if len(string) > 14:
+			return string[0:14] + "..."
+		else:
+			return string
+
 
 	# FUNÇÕES PARA PADRONIZAR E EVITAR BUGS E ERROS COM A ENTRADA DO PREÇO DO PRODUTO
 	def money_set_default(self, value):
@@ -1091,13 +1097,13 @@ class Storage(Screen):
 		self.novo_produto.dismiss()
 
 
-	# DIALOG DE CONFIRMAR REMOÇÃO PRODUTO
+	# DIALOG DE CONFIRMAR REMOÇÃO CLIENTE
 	remover_cliente = None
 	def confirmacao_remover_cliente(self, root, *args):
 		if not self.remover_cliente:
 			self.remover_cliente = MDDialog(
-				title=f'[color=#eeeeee][b]Deletar Cliente[/b][/color]',
-				text="[color=#eeeeee][b]Você deseja realmente excluir este cliente?\nEsse processo é irreversivel e não poderá ser desfeito.[/b][/color]",
+				title=f'[color=#eeeeee][b]Deletar Produto[/b][/color]',
+				text="[color=#eeeeee][b]Você deseja realmente excluir este produto?\nEsse processo é irreversivel e não poderá ser desfeito.[/b][/color]",
 				md_bg_color=get_color_from_hex('#323335'),
 				type="custom",
 				size_hint=[0.4, 0.4],
@@ -1108,7 +1114,7 @@ class Storage(Screen):
 						theme_text_color="Custom",
 						on_release=self.close_remover),
 					MDFlatButton(
-						text=f"[color=#eeeeee][b]DELETAR CLIENTE[/color][/b]",
+						text=f"[color=#eeeeee][b]DELETAR PRODUTO[/color][/b]",
 						theme_text_color="Custom",
 						on_release=root.remove_client)]
 			)
@@ -1164,8 +1170,11 @@ class Storage(Screen):
 			self.ids.info_fornecedor.text = ""
 			self.ids.info_estoque.text = ""
 			self.ids.info_critico.text = ""
+			self.ids.info_preco.text = ""
 			self.ids.recycle_view.data = []
 			toast("Cliente Removido com Sucesso", background=get_color_from_hex('#0b9b53'))
+			self.estoque_info_close(self.ids.clientes_info)
+			self.ids.label_info_storage.text = ""
 
 			# ATUALIZAR ITEMS
 			for i in range(len(self.estoque.database.index.values)):
@@ -1201,9 +1210,7 @@ class WindowManager(ScreenManager):
 	pass
 
 class InvisionStorage(MDApp):
-	cinza_1 = ""
 
-	clientes_info_state = NumericProperty(0)
 	def clientes_info_open(self, widget, *args):
 		animate = Animation(size_hint_x = 0.4, duration=0.05)
 		animate.start(widget)
@@ -1212,7 +1219,7 @@ class InvisionStorage(MDApp):
 		animate.start(widget)
 
 	def estoque_info_open(self, widget, *args):
-		animate = Animation(size_hint_x = 0.3, duration=0.05)
+		animate = Animation(size_hint_x = 0.4, duration=0.05)
 		animate.start(widget)
 	def estoque_info_close(self, widget, *args):
 		animate = Animation(size_hint_x = 0.0, duration=0.05)
