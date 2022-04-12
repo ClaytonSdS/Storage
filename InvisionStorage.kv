@@ -410,7 +410,7 @@
                     md_bg_color: get_color_from_hex('#eeeeee')
                     orientation: "horizontal"
                     Label:
-                        text: "[b]QUANTIDADE CRITICA[/b]"
+                        text: "[b]PREÇO (R$)[/b]"
                         halign: "center"
                         valign: "middle"
                         font_size: 15
@@ -423,8 +423,7 @@
                                 width: 0.8
                                 rectangle: self.x, self.y, self.width, self.height
                     TextInput:
-                        id: new_product_critico
-                        input_filter: "int"
+                        id: new_product_preco
                         font_size: 30
                         size_hint_x: 1.6
                         canvas.before:
@@ -601,6 +600,21 @@
                 rectangle: self.x, self.y, self.width, self.height
         Label:
             text: "[b]Quantidade[/b]"
+            font_size: 15
+            markup: True
+            color: get_color_from_hex('#242425')
+
+    MDBoxLayout:
+        orientation: "vertical"
+        size_hint_x: 0.6
+        canvas.before:
+            Color:
+                rgba: get_color_from_hex('#d9d9d9')
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+        Label:
+            text: "[b]Preço (R$)[/b]"
             font_size: 15
             markup: True
             color: get_color_from_hex('#242425')
@@ -848,6 +862,7 @@
     subcategoria_: ''
     quantidade_: ''
     fornecedor_: ''
+    preco_: ''
     md_bg_color: 0,0,0,0
 
     BoxLayout:
@@ -946,6 +961,25 @@
             markup: True
             color: get_color_from_hex('#242425')
 
+    BoxLayout:
+        padding: 10
+        size_hint_x: 0.6
+        canvas.before:
+            Color:
+                rgba: get_color_from_hex('#d9d9d9')
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+        Label:
+            font_size: 14
+            text: root.preco_
+            size_hint_x: 1
+            text_size: self.size
+            valign: "middle"
+            halign: "center"
+            markup: True
+            color: get_color_from_hex('#242425')
+
     ButtonTip_Clientes:
         canvas.before:
             Color:
@@ -955,7 +989,7 @@
                 rectangle: self.x, self.y, self.width, self.height
 
         on_release: app.estoque_info_open(root.parent.parent.parent.parent.children[0])
-        on_press: app.root.get_screen("Storage").refresh_infos(root.id_, root.categoria_, root.nome_,  root.fornecedor_, root.quantidade_)
+        on_press: app.root.get_screen("Storage").refresh_infos(root.id_, root.categoria_, root.nome_,  root.fornecedor_, root.quantidade_, root.preco_)
         on_press: app.root.get_screen("Storage").ids.label_info_storage.text = "[b]Info[/b]"
         icon: "chevron-right"
         icon_size: "35sp"
@@ -1620,6 +1654,24 @@ WindowManager:
                                     InputCapsLock:
                                         id: info_critico
                                         input_filter: "int"
+
+                                MDBoxLayout:
+                                    orientation: "horizontal"
+                                    Label:
+                                        text: "PREÇO"
+                                        halign: "center"
+                                        valign: "middle"
+                                        font_size: 15
+                                        markup: True
+                                        color: get_color_from_hex('#242425')
+                                        canvas.before:
+                                            Color:
+                                                rgba: get_color_from_hex('#676767')
+                                            Line:
+                                                width: 0.8
+                                                rectangle: self.x, self.y, self.width, self.height
+                                    InputCapsLock:
+                                        id: info_preco
 
                                 MDBoxLayout:
                                     orientation: "horizontal"

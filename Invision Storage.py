@@ -118,38 +118,42 @@ class Clientes_():
 class Estoque_():
 	def __init__(self):
 		read_or_new_pickle(path="estoque.p", default=pd.DataFrame(
-			data={"CATEGORIA": [], "PRODUTO": [], "FORNECEDOR": [], "QUANTIDADE": [], "ESTOQUE_CRITICO": [], "FORNECEDOR_ID": [], "FORNECEDOR_TELEFONE": []}))
-
+			data={"CATEGORIA": [], "PRODUTO": [], "FORNECEDOR": [], "QUANTIDADE": [], "ESTOQUE_CRITICO": [], "PRECO":[],"FORNECEDOR_ID": [], "FORNECEDOR_TELEFONE": []}))
 		self.database = pickle.load((open("estoque.p", "rb")))
 
 	def load(self):
 		self.database = pickle.load((open("estoque.p", "rb")))
 
-	def add_data(self, categoria="", produto="", fornecedor="", quantidade="", estoque_critico="", fornecedor_id="", fornecedor_telefone=""):
+	# FUNÇÃO PARA ADICIONAR UM NOVO PRODUTO NO DATABASE
+	def add_data(self, categoria="", produto="", fornecedor="", quantidade="", estoque_critico="", preco="", fornecedor_id="", fornecedor_telefone=""):
 		self.new_id = 1
 		try:
 			self.new_id = np.array(self.database.index.values).max() + 1
 		except ValueError: pass
-
-		new_row = [categoria, produto, fornecedor, quantidade, estoque_critico, fornecedor_id, fornecedor_telefone]
+		new_row = [categoria, produto, fornecedor, quantidade, estoque_critico, preco, fornecedor_id, fornecedor_telefone]
 		self.database = self.database.append(pd.Series(new_row, index=self.database.columns, name = self.new_id))
 		pickle.dump(self.database, open("estoque.p", "wb"))
 
-	def data_info(self, id, categoria, produto, fornecedor, quantidade):
+	# FUNÇÃO UTILIZADA PARA CRIAR A TABELA COM OS PRODUTOS NO DATABASE
+	def data_info(self, id, categoria, produto, fornecedor, quantidade, preco):
 		df2_ = self.database.loc[self.database["CATEGORIA"] == str(categoria)]
 		df3_ = df2_.loc[self.database["PRODUTO"] == str(produto)]
 		df4_ = df3_.loc[self.database["FORNECEDOR"] == str(fornecedor)]
 		df5_ = df4_.loc[self.database["QUANTIDADE"] == str(quantidade)]
-		return df5_
+		df6_ = df5_.loc[self.database["PRECO"] == str(preco)]
+		return df6_
 
+	# ALTERAR AS INFORMAÇÕES DE UM PRODUTO COM BASE NO SEU ID
 	def change_info(self, id, new_infos):
-		self.database.loc[id].loc[["CATEGORIA", "PRODUTO", "FORNECEDOR", "QUANTIDADE", "ESTOQUE_CRITICO"]] = new_infos
+		self.database.loc[id].loc[["CATEGORIA", "PRODUTO", "FORNECEDOR", "QUANTIDADE", "ESTOQUE_CRITICO", "PRECO"]] = new_infos
 		pickle.dump(self.database, open("estoque.p", "wb"))
 
+	# REMOVER UM PRODUTO DO DATABASE COM BASE NO SEU ID
 	def remove_data(self, id):
 		self.database.drop(int(id), inplace=True)
 		pickle.dump(self.database, open("estoque.p", "wb"))
 
+	# PROCURAR UM PRODUTO NO DATABASE
 	def search_item(self, item):
 		self.data_found = []
 		for coluna in range(len(self.database.columns)):
@@ -160,7 +164,6 @@ class Estoque_():
 
 		if len(self.data_found) == 0 and item.isdigit() == True:
 			self.data_found = self.database.loc[self.database.index == int(item)]
-
 		return self.data_found
 
 def read_or_new_pickle(path, default):
@@ -179,6 +182,9 @@ def read_or_new_pickle(path, default):
 class Menu(MDFloatLayout):
 	def reset_colors(self):
 		pass
+
+def TextoPadronizado(string):
+	return ' '.join(str(string).split()).upper()
 
 
 from typing import List, NoReturn
@@ -773,6 +779,9 @@ class Clientes(Screen):
 
 
 class Storage(Screen):
+	def estoque_info_close(self, widget, *args):
+		animate = Animation(size_hint_x = 0.0, duration=0.05)
+		animate.start(widget)
 
 	class Classes_Spinner(Spinner):
 		def __init__(self, **kwargs):
@@ -793,53 +802,11 @@ class Storage(Screen):
 	clientes = Clientes_()
 	estoque = Estoque_()
 
-	# FORNECEDORES- FUNÇÕES DE SELECIONAR | FECHAR | ALTERAR
-	selecionar_fonecedor = None
+	fornecedor_id = ""
+	fornecedor_to_add = "SELECIONAR"
+
+	# ALTERAR FORNECEDOR A PARTIR DO MENU LATERAL DIREITO DE INFORMAÇÕES
 	selecionar_fonecedor2 = None
-	class Fornecedores(MDFloatLayout, HoverBehavior):
-		def __init__(self, **kwargs):
-			super().__init__(**kwargs)
-			fornecedores_only = Clientes_()
-			fornecedores_only = fornecedores_only.database.loc[fornecedores_only.database["CLASSE"]=='FORNECEDOR']
-			for i in range(len(fornecedores_only)):
-				self.ids.recycle_view.data.append({'id_': str(fornecedores_only.index.values[i]), 'fornecedor_': str(fornecedores_only["NOME"].values[i])})
-
-		def refresh_data(self):
-			self.ids.recycle_view.data = []
-			fornecedores_only = Clientes_()
-			fornecedores_only = fornecedores_only.database.loc[fornecedores_only.database["CLASSE"] == 'FORNECEDOR']
-			for i in range(len(fornecedores_only)):
-				self.ids.recycle_view.data.append({'id_': str(fornecedores_only.index.values[i]),'fornecedor_': str(fornecedores_only["NOME"].values[i])})
-
-		def search_fornecedor(self, string):
-			fornecedores_search = Clientes_()
-			search_for = self.ids.search_bar_fornecedores.text
-			search_for = ' '.join(search_for.split()).upper()
-			data_found = fornecedores_search.search_item(search_for)
-			try:
-				data_found = data_found.loc[data_found["CLASSE"] == 'FORNECEDOR']
-			except AttributeError: pass
-
-			if search_for == "":
-				self.ids.recycle_view.data = []
-				# ATUALIZAR ITEMS
-				self.ids.recycle_view.data = []
-				fornecedores_only = Clientes_()
-				fornecedores_only = fornecedores_only.database.loc[fornecedores_only.database["CLASSE"] == 'FORNECEDOR']
-				for i in range(len(fornecedores_only)):
-					self.ids.recycle_view.data.append({'id_': str(fornecedores_only.index.values[i]),'fornecedor_': str(fornecedores_only["NOME"].values[i])})
-
-			else:
-				if len(data_found) == 0:
-					toast(f"Atenção: Nenhum Resultado Encontrado", background=get_color_from_hex('#b92034'))
-					self.ids.recycle_view.data = []
-
-				else:
-					self.ids.recycle_view.data = []
-					toast(f"Resultados Encontrados: {len(data_found)}", background=get_color_from_hex('#0b9b53'))
-					# ATUALIZAR ITEMS
-					for i in range(len(data_found.index.values)):
-						self.ids.recycle_view.data.append({'id_': str(data_found.index.values[i]),'fornecedor_': str(data_found["NOME"].values[i])})
 	class Fornecedores2(MDFloatLayout, HoverBehavior):
 		def __init__(self, **kwargs):
 			super().__init__(**kwargs)
@@ -903,6 +870,64 @@ class Storage(Screen):
 		self.selecionar_fonecedor2.content_cls.refresh_data()
 	def close_fornecedores2(self, obj):
 		self.selecionar_fonecedor2.dismiss()
+	def mudar_fornecedor(self, root, modo, fornecedor=""):
+		# USADO DENTRO DO DIALOG - ALTERAR O FORNECEDOR DO MEU ITEM
+		if fornecedor != "" and modo == "alterar_fornecedor":
+			self.ids.info_fornecedor.text = str(fornecedor)
+			toast("Fornecedor Alterado com Sucesso", background=get_color_from_hex('#0b9b53'))
+			self.selecionar_fonecedor.dismiss()
+			self.change_infos()
+
+		# ABRIR DIALOG - USADO AO CLICAR NO BOTÃO DE FORNECEDOR EM MAIS INFO
+		if fornecedor == "" and modo == "open":
+			self.selecionar_fonecedores(root)
+
+	# ADICIONAR NOVO PRODUTOS
+	selecionar_fonecedor = None
+	class Fornecedores(MDFloatLayout, HoverBehavior):
+		def __init__(self, **kwargs):
+			super().__init__(**kwargs)
+			fornecedores_only = Clientes_()
+			fornecedores_only = fornecedores_only.database.loc[fornecedores_only.database["CLASSE"]=='FORNECEDOR']
+			for i in range(len(fornecedores_only)):
+				self.ids.recycle_view.data.append({'id_': str(fornecedores_only.index.values[i]), 'fornecedor_': str(fornecedores_only["NOME"].values[i])})
+
+		def refresh_data(self):
+			self.ids.recycle_view.data = []
+			fornecedores_only = Clientes_()
+			fornecedores_only = fornecedores_only.database.loc[fornecedores_only.database["CLASSE"] == 'FORNECEDOR']
+			for i in range(len(fornecedores_only)):
+				self.ids.recycle_view.data.append({'id_': str(fornecedores_only.index.values[i]),'fornecedor_': str(fornecedores_only["NOME"].values[i])})
+
+		def search_fornecedor(self, string):
+			fornecedores_search = Clientes_()
+			search_for = self.ids.search_bar_fornecedores.text
+			search_for = ' '.join(search_for.split()).upper()
+			data_found = fornecedores_search.search_item(search_for)
+			try:
+				data_found = data_found.loc[data_found["CLASSE"] == 'FORNECEDOR']
+			except AttributeError: pass
+
+			if search_for == "":
+				self.ids.recycle_view.data = []
+				# ATUALIZAR ITEMS
+				self.ids.recycle_view.data = []
+				fornecedores_only = Clientes_()
+				fornecedores_only = fornecedores_only.database.loc[fornecedores_only.database["CLASSE"] == 'FORNECEDOR']
+				for i in range(len(fornecedores_only)):
+					self.ids.recycle_view.data.append({'id_': str(fornecedores_only.index.values[i]),'fornecedor_': str(fornecedores_only["NOME"].values[i])})
+
+			else:
+				if len(data_found) == 0:
+					toast(f"Atenção: Nenhum Resultado Encontrado", background=get_color_from_hex('#b92034'))
+					self.ids.recycle_view.data = []
+
+				else:
+					self.ids.recycle_view.data = []
+					toast(f"Resultados Encontrados: {len(data_found)}", background=get_color_from_hex('#0b9b53'))
+					# ATUALIZAR ITEMS
+					for i in range(len(data_found.index.values)):
+						self.ids.recycle_view.data.append({'id_': str(data_found.index.values[i]),'fornecedor_': str(data_found["NOME"].values[i])})
 	def selecionar_fonecedores(self, root, *args):
 		if not self.selecionar_fonecedor:
 			self.selecionar_fonecedor = MDDialog(
@@ -922,27 +947,53 @@ class Storage(Screen):
 		self.selecionar_fonecedor.content_cls.refresh_data()
 	def close_fornecedores(self, obj):
 		self.selecionar_fonecedor.dismiss()
-	def clientes_info_close(self, widget, *args):
-		animate = Animation(size_hint_x = 0.0, duration=0.05)
-		animate.start(widget)
-	def mudar_fornecedor(self, root, modo, fornecedor=""):
-		# USADO DENTRO DO DIALOG - ALTERAR O FORNECEDOR DO MEU ITEM
-		if fornecedor != "" and modo == "alterar_fornecedor":
-			self.ids.info_fornecedor.text = str(fornecedor)
-			toast("Fornecedor Alterado com Sucesso", background=get_color_from_hex('#0b9b53'))
-			self.selecionar_fonecedor.dismiss()
-			self.change_infos()
+	def AdicionarNovoProduto(self, root, *args):
+		# INFORMAÇÕES COLETADAS DOS INPUTS
+		preco = self.novo_produto.content_cls.ids.new_product_preco.text
+		preco = self.money(self.money_set_default(preco))
+		id_fornecedor = self.fornecedor_id
+		fornecedor = self.fornecedor_to_add
+		categoria = self.novo_produto.content_cls.ids.new_product_categoria.text
+		produto = self.novo_produto.content_cls.ids.new_product_produto.text
+		quantidade = self.novo_produto.content_cls.ids.new_product_quantidade.text
+		categoria = ' '.join(categoria.split()).upper()
+		produto = ' '.join(produto.split()).upper()
+		quantidade = ' '.join(quantidade.split()).upper()
 
-		# ABRIR DIALOG - USADO AO CLICAR NO BOTÃO DE FORNECEDOR EM MAIS INFO
-		if fornecedor == "" and modo == "open":
-			self.selecionar_fonecedores(root)
-
-	def auto_size(self, string):
-		if len(string) > 14:
-			return string[0:14] + "..."
+		if preco == "FORMATO_INVALIDO":
+			toast("Atenção: Preço Invalido", background=get_color_from_hex('#b92034'))
 		else:
-			return string
+			if fornecedor == "" or categoria == "" or quantidade == "" or fornecedor == "SELECIONAR"  or preco == "":
+				toast("Atenção: Todos os Campos Devem ser Preenchidos", background=get_color_from_hex('#b92034'))
 
+			else:
+				all_fornecedores = Clientes_()
+				all_fornecedores = all_fornecedores.database
+
+				self.valor_critico = str(int(0.25*float(quantidade)))
+
+				# RESETAR TODOS OS INPUTS E FECHAR O DIALOG
+				self.novo_produto.content_cls.ids.fornecedor_novo.text = "SELECIONAR"
+				self.novo_produto.content_cls.ids.new_product_categoria.text = ""
+				self.novo_produto.content_cls.ids.new_product_produto.text = ""
+				self.novo_produto.content_cls.ids.new_product_quantidade.text = ""
+				self.novo_produto.content_cls.ids.new_product_preco.text = ""
+				self.novo_produto.dismiss()
+
+				estoque_critico = self.valor_critico
+				telefone_fornecedor = all_fornecedores.loc[all_fornecedores["CLASSE"] == 'FORNECEDOR']["TELEFONE"][int(id_fornecedor)]
+				self.estoque.add_data(categoria, produto, fornecedor, quantidade, estoque_critico, preco, id_fornecedor, telefone_fornecedor)
+
+				toast("Produto Adicionado com Sucesso", background=get_color_from_hex('#0b9b53'))
+				self.ids.recycle_view.data = []
+				for i in range(len(self.estoque.database.index.values)):
+					ids = self.estoque.database.index.values
+					categorias = self.estoque.database["CATEGORIA"].values
+					produtos = self.estoque.database["PRODUTO"].values
+					fornecedores = self.estoque.database["FORNECEDOR"].values
+					quantidades = self.estoque.database["QUANTIDADE"].values
+					precos = self.estoque.database["PRECO"].values
+					self.ids.recycle_view.data.append({'id_': str(ids[i]), 'categoria_': str(categorias[i]), 'nome_': str(produtos[i]), 'fornecedor_': str(fornecedores[i]), 'quantidade_': str(quantidades[i]), 'preco_':str(precos[i])})
 	def NovoProdutoSelecionar_fornecedor(self, root, modo, id, fornecedor=""):
 		# USADO DENTRO DO DIALOG - ALTERAR O FORNECEDOR DO MEU ITEM
 		if fornecedor != "" and modo == "novo_produto":
@@ -953,60 +1004,27 @@ class Storage(Screen):
 			self.novo_produto.content_cls.ids.fornecedor_novo.text = f"[b]{fornecedor_short}[/b]"
 			self.selecionar_fonecedor2.dismiss()
 
-	def AdicionarNovoProduto(self, root, *args):
-		try:
-			all_fornecedores = Clientes_()
-			all_fornecedores = all_fornecedores.database
+	# FUNÇÕES PARA PADRONIZAR E EVITAR BUGS E ERROS COM A ENTRADA DO PREÇO DO PRODUTO
+	def money_set_default(self, value):
+		if value.isdigit() == True:
+			return str(value) + ".00"
+		if value.isdigit() == False:
+			slice_by_comma = value.split(",")
+			try:
+				if bool(float('.'.join(slice_by_comma))) == True:
+					price = float('.'.join(slice_by_comma))
+					return price
+			except ValueError:
+				return 'FORMATO_INVALIDO'
+	def money(self, value):
+		if value == "FORMATO_INVALIDO":
+			return "FORMATO_INVALIDO"
 
-			id_fornecedor = self.fornecedor_id
-			fornecedor = self.fornecedor_to_add
-			categoria = self.novo_produto.content_cls.ids.new_product_categoria.text
-			produto = self.novo_produto.content_cls.ids.new_product_produto.text
-			quantidade = self.novo_produto.content_cls.ids.new_product_quantidade.text
-			self.valor_critico = self.novo_produto.content_cls.ids.new_product_critico.text
-
-			categoria = ' '.join(categoria.split()).upper()
-			produto = ' '.join(produto.split()).upper()
-			quantidade = ' '.join(quantidade.split()).upper()
-
-			if fornecedor == "" or categoria == "" or quantidade == "" or fornecedor == "SELECIONAR":
-				toast("Atenção: Todos os Campos Devem ser Preenchidos", background=get_color_from_hex('#b92034'))
-
-			else:
-				if self.valor_critico == "":
-					self.valor_critico = str(int(0.25*float(quantidade)))
-
-				if self.valor_critico != "":
-					self.valor_critico = self.valor_critico
-
-				self.novo_produto.content_cls.ids.fornecedor_novo.text = "SELECIONAR"
-				self.novo_produto.content_cls.ids.new_product_categoria.text = ""
-				self.novo_produto.content_cls.ids.new_product_produto.text = ""
-				self.novo_produto.content_cls.ids.new_product_quantidade.text = ""
-				self.novo_produto.content_cls.ids.new_product_critico.text = ""
-
-				self.novo_produto.dismiss()
-
-				estoque_critico = self.valor_critico
-				telefone_fornecedor = all_fornecedores.loc[all_fornecedores["CLASSE"] == 'FORNECEDOR']["TELEFONE"][int(id_fornecedor)]
-				self.estoque.add_data(categoria, produto, fornecedor, quantidade, estoque_critico, id_fornecedor, telefone_fornecedor)
-
-				toast("Produto Adicionado com Sucesso", background=get_color_from_hex('#0b9b53'))
-				self.ids.recycle_view.data = []
-				for i in range(len(self.estoque.database.index.values)):
-					ids = self.estoque.database.index.values
-					categorias = self.estoque.database["CATEGORIA"].values
-					produtos = self.estoque.database["PRODUTO"].values
-					fornecedores = self.estoque.database["FORNECEDOR"].values
-					quantidades = self.estoque.database["QUANTIDADE"].values
-					self.ids.recycle_view.data.append(
-						{'id_': str(ids[i]), 'categoria_': str(categorias[i]), 'nome_': str(produtos[i]), 'fornecedor_': str(fornecedores[i]), 'quantidade_': str(quantidades[i])})
-
-
-
-		except AttributeError:
-			toast("Atenção: Todos os Campos Devem ser Preenchidos", background=get_color_from_hex('#b92034'))
-
+		else:
+			price = str(value).split('.')
+			if len(price[1]) == 1:
+				price[1] = price[1] + '0'
+			return ",".join(price)
 
 	# BARRA DE BUSCA
 	def search(self):
@@ -1023,10 +1041,8 @@ class Storage(Screen):
 				produtos = self.estoque.database["PRODUTO"].values
 				fornecedores = self.estoque.database["FORNECEDOR"].values
 				quantidades = self.estoque.database["QUANTIDADE"].values
-				self.ids.recycle_view.data.append(
-					{'id_': str(ids[i]), 'categoria_': str(categorias[i]), 'nome_': str(produtos[i]),
-					 'fornecedor_': str(fornecedores[i]), 'quantidade_': str(quantidades[i])})
-
+				precos = self.estoque.database["PRECO"].values
+				self.ids.recycle_view.data.append({'id_': str(ids[i]), 'categoria_': str(categorias[i]), 'nome_': str(produtos[i]), 'fornecedor_': str(fornecedores[i]), 'quantidade_': str(quantidades[i]), 'preco_':str(precos[i])})
 
 		else:
 			if len(data_found) == 0:
@@ -1044,8 +1060,8 @@ class Storage(Screen):
 					produtos = data_found["PRODUTO"].values
 					fornecedores = data_found["FORNECEDOR"].values
 					quantidades = data_found["QUANTIDADE"].values
-					self.ids.recycle_view.data.append(
-						{'id_': str(ids[i]), 'categoria_': str(categorias[i]), 'nome_': str(produtos[i]),  'fornecedor_': str(fornecedores[i]), 'quantidade_': str(quantidades[i])})
+					precos = data_found["PRECO"].values
+					self.ids.recycle_view.data.append({'id_': str(ids[i]), 'categoria_': str(categorias[i]), 'nome_': str(produtos[i]),  'fornecedor_': str(fornecedores[i]), 'quantidade_': str(quantidades[i]), 'preco_':str(precos[i])})
 
 	# DIALOG CRIAR NOVO PRODUTO
 	class Conteudo_NovoProduto(MDFloatLayout, HoverBehavior):
@@ -1075,7 +1091,7 @@ class Storage(Screen):
 		self.novo_produto.dismiss()
 
 
-	# DIALOG DE CONFIRMAR REMOÇÃO CLIENTE
+	# DIALOG DE CONFIRMAR REMOÇÃO PRODUTO
 	remover_cliente = None
 	def confirmacao_remover_cliente(self, root, *args):
 		if not self.remover_cliente:
@@ -1102,35 +1118,45 @@ class Storage(Screen):
 
 
 	# FUNÇÕES RELACIONADAS A TABELA DE CLIENTES
-	def refresh_infos(self, id, categoria, produto, fornecedor, quantidade):
-		data_find = self.estoque.data_info(id, categoria, produto, fornecedor, quantidade)
+	def refresh_infos(self, id, categoria, produto, fornecedor, quantidade, preco):
+		data_find = self.estoque.data_info(id, categoria, produto, fornecedor, quantidade, preco)
 		self.ids.info_id.text = str(data_find.index[0])
 		self.ids.info_categoria.text = str(data_find["CATEGORIA"].values[0])
 		self.ids.info_produto.text = str(data_find["PRODUTO"].values[0])
 		self.ids.info_fornecedor.text = str(data_find["FORNECEDOR"].values[0])
 		self.ids.info_estoque.text = str(data_find["QUANTIDADE"].values[0])
 		self.ids.info_critico.text = str(data_find["ESTOQUE_CRITICO"].values[0])
+		self.ids.info_preco.text = str(data_find["PRECO"].values[0])
 	def change_infos(self):
-		new_row = [self.ids.info_categoria.text , self.ids.info_produto.text, self.ids.info_fornecedor.text, self.ids.info_estoque.text, self.ids.info_critico.text]
 
-		if self.ids.info_id.text != "":
-			self.estoque.change_info(int(self.ids.info_id.text), new_row)
-			toast("Alteração Realizada com Sucesso", background=get_color_from_hex('#0b9b53'))
-			self.ids.recycle_view.data = []
-			for i in range(len(self.estoque.database.index.values)):
-				ids = self.estoque.database.index.values
-				categorias = self.estoque.database["CATEGORIA"].values
-				produtos = self.estoque.database["PRODUTO"].values
-				fornecedores = self.estoque.database["FORNECEDOR"].values
-				quantidades = self.estoque.database["QUANTIDADE"].values
-				self.ids.recycle_view.data.append({'id_': str(ids[i]), 'categoria_': str(categorias[i]), 'nome_': str(produtos[i]), 'fornecedor_': str(fornecedores[i]), 'quantidade_': str(quantidades[i])})
+		novo_preco = self.ids.info_preco.text
+		novo_preco = self.money(self.money_set_default(novo_preco))
+		if novo_preco == "FORMATO_INVALIDO":
+			toast("Atenção: Preço Invalido", background=get_color_from_hex('#b92034'))
+
 		else:
-			toast("Atenção: Nenhum Cliente Selecionado", background=get_color_from_hex('#b92034'))
+			new_row = [TextoPadronizado(self.ids.info_categoria.text), TextoPadronizado(self.ids.info_produto.text), TextoPadronizado(self.ids.info_fornecedor.text), TextoPadronizado(self.ids.info_estoque.text), TextoPadronizado(self.ids.info_critico.text), novo_preco]
+			if self.ids.info_id.text != "":
+				self.estoque.change_info(int(self.ids.info_id.text), new_row)
+				toast("Alteração Realizada com Sucesso", background=get_color_from_hex('#0b9b53'))
+				self.ids.recycle_view.data = []
+
+				self.estoque_info_close(self.ids.clientes_info)
+
+				for i in range(len(self.estoque.database.index.values)):
+					ids = self.estoque.database.index.values
+					categorias = self.estoque.database["CATEGORIA"].values
+					produtos = self.estoque.database["PRODUTO"].values
+					fornecedores = self.estoque.database["FORNECEDOR"].values
+					quantidades = self.estoque.database["QUANTIDADE"].values
+					precos = self.estoque.database["PRECO"].values
+					self.ids.recycle_view.data.append({'id_': str(ids[i]), 'categoria_': str(categorias[i]), 'nome_': str(produtos[i]), 'fornecedor_': str(fornecedores[i]), 'quantidade_': str(quantidades[i]), 'preco_':str(precos[i])})
+			else:
+				toast("Atenção: Nenhum Cliente Selecionado", background=get_color_from_hex('#b92034'))
 	def remove_client(self, root):
 		if self.ids.info_id.text != "":
 			self.estoque.remove_data(int(self.ids.info_id.text))
 			self.remover_cliente.dismiss()
-
 			# RESETAR TEXTOS
 			self.ids.info_id.text = ""
 			self.ids.info_categoria.text = ""
@@ -1148,7 +1174,8 @@ class Storage(Screen):
 				produtos = self.estoque.database["PRODUTO"].values
 				fornecedores = self.estoque.database["FORNECEDOR"].values
 				quantidades = self.estoque.database["QUANTIDADE"].values
-				self.ids.recycle_view.data.append({'id_': str(ids[i]), 'categoria_': str(categorias[i]), 'nome_': str(produtos[i]),'fornecedor_': str(fornecedores[i]), 'quantidade_': str(quantidades[i])})
+				precos = self.estoque.database["PRECO"].values
+				self.ids.recycle_view.data.append({'id_': str(ids[i]), 'categoria_': str(categorias[i]), 'nome_': str(produtos[i]),'fornecedor_': str(fornecedores[i]), 'quantidade_': str(quantidades[i]), 'preco_':str(precos[i])})
 
 		else:
 			toast("Atenção: Nenhum Cliente Selecionado", background=get_color_from_hex('#b92034'))
@@ -1167,7 +1194,8 @@ class Storage(Screen):
 				produtos = self.estoque.database["PRODUTO"].values
 				fornecedores = self.estoque.database["FORNECEDOR"].values
 				quantidades = self.estoque.database["QUANTIDADE"].values
-				self.ids.recycle_view.data.append({'id_': str(ids[i]), 'categoria_': str(categorias[i]), 'nome_': str(produtos[i]), 'fornecedor_':str(fornecedores[i]), 'quantidade_':str(quantidades[i])})
+				precos = self.estoque.database["PRECO"].values
+				self.ids.recycle_view.data.append({'id_': str(ids[i]), 'categoria_': str(categorias[i]), 'nome_': str(produtos[i]), 'fornecedor_':str(fornecedores[i]), 'quantidade_':str(quantidades[i]), 'preco_':str(precos[i])})
 
 class WindowManager(ScreenManager):
 	pass
