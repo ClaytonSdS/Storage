@@ -1,7 +1,7 @@
 ![Logo Invision Study](https://user-images.githubusercontent.com/95229093/205111573-e5a97008-e1ec-4728-9c89-01574ce3fa07.png)
 
 
-This project was made to improve Python skills and the main objective was to develop a software like to control study and its respective subjects, grades, etc.
+This project was made to improve Python skills and the main objective was to develop a software like to manage storage, clients and suppliers
 
 
 # How to Use
