@@ -851,8 +851,6 @@
             icon_color: get_color_from_hex("#FFFFFF")
 
 
-
-
 <Estoque@BoxLayout>:
     orientation: "horizontal"
     size_hint: 1, None
@@ -1142,31 +1140,6 @@
                     allow_ratio: False
                     center_x: self.parent.center_x
                     center_y: self.parent.center_y
-            # INICIO
-            Menu_Botao:
-                orientation: "horizontal"
-                ButtonTip:
-                    icon: "view-dashboard"
-                    icon_size: "35sp"
-                    size_hint: (0.5,1)
-                    pos_hint: {"center_x":0.5, "center_y":0.5}
-                    theme_icon_color: "Custom"
-                    icon_color: get_color_from_hex('#242425')
-                    on_release: root.parent.parent.parent.manager.current = "Inicio"; self.md_bg_color = get_color_from_hex("#eeeeee")
-
-            # VENDER
-            Menu_Botao:
-                orientation: "horizontal"
-                spacing: 0
-
-                ButtonTip:
-                    icon: "cart-outline"
-                    icon_size: "35sp"
-                    size_hint: (0.5,1)
-                    pos_hint: {"center_x":0.5, "center_y":0.5}
-                    theme_icon_color: "Custom"
-                    icon_color: get_color_from_hex('#242425')
-                    on_release: root.parent.parent.parent.manager.current = "Sell"; self.md_bg_color = get_color_from_hex("#eeeeee")
 
             # ESTOQUE
             Menu_Botao:
@@ -1194,129 +1167,24 @@
                     icon_color: get_color_from_hex('#242425')
                     on_release: root.parent.parent.parent.manager.current = "Clientes"; self.md_bg_color = get_color_from_hex("#eeeeee")
 
-            # REVISION
-            Menu_Botao:
-                size_hint_x: 0.5
-                orientation: "horizontal"
-                spacing: 0
-
-                ButtonTip:
-                    icon: "robot-happy"
-                    icon_size: "35sp"
-                    size_hint: (0.5,1)
-                    pos_hint: {"center_x":0.5, "center_y":0.5}
-                    theme_icon_color: "Custom"
-                    icon_color: get_color_from_hex('#242425')
-                    on_release: root.parent.parent.parent.manager.current = "IA"; self.md_bg_color = get_color_from_hex("#eeeeee")
-
-            # CONFIGURAÇÕES
-            Menu_Botao:
-                orientation: "horizontal"
-                spacing: 0
-                ButtonTip:
-                    icon: "cog"
-                    icon_size: "35sp"
-                    size_hint: (0.5,1)
-                    pos_hint: {"center_x":0.5, "center_y":0.5}
-                    theme_icon_color: "Custom"
-                    icon_color: get_color_from_hex('#242425')
-                    on_release: root.parent.parent.parent.manager.current = "Storage"; self.md_bg_color = get_color_from_hex("#eeeeee")
 
             MDBoxLayout:
                 opacity: 100
-                size_hint: (1,2.5)
+                size_hint: (1,6.5)
                 md_bg_color: get_color_from_hex("#eeeeee")
 
 
 
 WindowManager:
     transition: FadeTransition()
-    Inicio:
-	    name: "Inicio"
-	Sell:
-	    name: "Sell"
+
 	Storage:
 	    name: "Storage"
-	IA:
-	    name: "IA"
-
 	Clientes:
 	    name: "Clientes"
 
 
 #///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-<Inicio>
-    MDGridLayout:
-        cols: 2
-        rows: 1
-        md_bg_color: get_color_from_hex("#d9d9d9")
-        spacing: 2
-        MDBoxLayout:
-            id: menu
-            orientation: "vertical"
-            size_hint_x: None
-            width: int(0.1*self.parent.width)
-            md_bg_color: get_color_from_hex("#d9d9d9")
-            spacing: 2
-            Menu:
-
-        #/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        MDBoxLayout:
-            orientation: 'vertical'
-            md_bg_color: get_color_from_hex("#d9d9d9")
-            pos_hint: 0.5, 0.5
-            spacing: 2
-            MDBoxLayout:
-                size_hint_y: None
-                height: 70
-                md_bg_color: get_color_from_hex("#eeeeee")
-                orientation: "horizontal"
-                padding: [20,0]
-                MDLabel:
-                    markup: True
-                    text: "Inicio"
-                    font_size: 20
-                    font_name: "Roboto-Bold"
-            MDBoxLayout:
-                md_bg_color: get_color_from_hex("#eeeeee")
-
-
-#///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-<Sell>
-    MDGridLayout:
-        cols: 2
-        rows: 1
-        md_bg_color: get_color_from_hex("#d9d9d9")
-        spacing: 2
-        MDBoxLayout:
-            id: menu
-            orientation: "vertical"
-            size_hint_x: None
-            width: int(0.1*self.parent.width)
-            md_bg_color: get_color_from_hex("#d9d9d9")
-            spacing: 2
-            Menu:
-
-        #/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        MDBoxLayout:
-            orientation: 'vertical'
-            md_bg_color: get_color_from_hex("#d9d9d9")
-            pos_hint: 0.5, 0.5
-            spacing: 2
-            MDBoxLayout:
-                size_hint_y: None
-                height: 70
-                md_bg_color: get_color_from_hex("#eeeeee")
-                orientation: "horizontal"
-                padding: [20,0]
-                MDLabel:
-                    markup: True
-                    text: "Vender"
-                    font_size: 20
-                    font_name: "Roboto-Bold"
-
-            MDBoxLayout:
-                md_bg_color: get_color_from_hex("#eeeeee")
 
 #///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 <Storage>
@@ -1715,42 +1583,6 @@ WindowManager:
                         theme_icon_color: "Custom"
                         icon_color: get_color_from_hex('#eeeeee')
 
-#///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-<IA>
-    MDGridLayout:
-        cols: 2
-        rows: 1
-        md_bg_color: get_color_from_hex("#d9d9d9")
-        spacing: 2
-        MDBoxLayout:
-            id: menu
-            orientation: "vertical"
-            size_hint_x: None
-            width: int(0.1*self.parent.width)
-            md_bg_color: get_color_from_hex("#d9d9d9")
-            spacing: 2
-            Menu:
-
-        #/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        MDBoxLayout:
-            orientation: 'vertical'
-            md_bg_color: get_color_from_hex("#d9d9d9")
-            pos_hint: 0.5, 0.5
-            spacing: 2
-            MDBoxLayout:
-                size_hint_y: None
-                height: 70
-                md_bg_color: get_color_from_hex("#eeeeee")
-                orientation: "horizontal"
-                padding: [20,0]
-                MDLabel:
-                    markup: True
-                    text: "ReVision"
-                    font_size: 20
-                    font_name: "Roboto-Bold"
-
-            MDBoxLayout:
-                md_bg_color: get_color_from_hex("#eeeeee")
 
 #///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 <Clientes>

@@ -50,6 +50,7 @@ from kivymd.uix.button import MDRectangleFlatIconButton
 from kivy.uix.label import Label
 from kivymd.uix.list import OneLineAvatarIconListItem
 from kivymd.uix.button import MDRectangleFlatButton
+from kivymd.uix.button import MDRectangleFlatIconButton
 
 class ItemConfirm(OneLineAvatarIconListItem):
 	divider = None
@@ -345,8 +346,6 @@ class InputCapsLock(TextInput):
 		Clock.schedule_interval(caps_lock, 0.000002)
 
 
-from kivymd.uix.button import MDRectangleFlatIconButton
-
 
 class Header_Clientes_Tabela(MDBoxLayout):
 	pass
@@ -513,13 +512,6 @@ class Alterar_Fornecedor(MDRectangleFlatButton, HoverBehavior):
 class Inicio(Screen):
 	pass
 
-
-class Sell(Screen):
-	pass
-
-
-class IA(Screen):
-	pass
 
 class SpinnerOptions(SpinnerOption):
 	def __init__(self, **kwargs):
@@ -758,8 +750,8 @@ class Clientes(Screen):
 
 	def on_enter(self):
 		def refresh_name(dt):
-			self.ids.clientes_header.height = self.ids.menu.children[0].children[0].children[0].children[4].size[1] + 2
-			self.ids.clientes_header2.height = self.ids.menu.children[0].children[0].children[0].children[4].size[1] + 2
+			self.ids.clientes_header.height = self.ids.menu.children[0].children[0].children[0].children[3].size[1] + 2
+			self.ids.clientes_header2.height = self.ids.menu.children[0].children[0].children[0].children[3].size[1] + 2
 			self.ids.search_bar_clientes.width = self.ids.search_clientes_box.width * 0.8
 		Clock.schedule_interval(refresh_name, 0.05)
 
@@ -770,12 +762,7 @@ class Clientes(Screen):
 				nomes =  self.clientes.database["NOME"].values
 				telefones =  self.clientes.database["TELEFONE"].values
 
-
 				self.ids.recycle_view.data.append({'id_': str(ids[i]), 'classe_': str(classes[i]), 'nome_': str(nomes[i]), 'telefone_': str(telefones[i])})
-
-
-
-
 
 
 class Storage(Screen):
@@ -1191,25 +1178,38 @@ class Storage(Screen):
 
 	def on_enter(self):
 		def refresh_name(dt):
-			self.ids.clientes_header.height = self.ids.menu.children[0].children[0].children[0].children[4].size[1] + 2
-			self.ids.clientes_header2.height = self.ids.menu.children[0].children[0].children[0].children[4].size[1] + 2
+			self.ids.clientes_header.height = self.ids.menu.children[0].children[0].children[0].children[3].size[1] + 2
+			self.ids.clientes_header2.height = self.ids.menu.children[0].children[0].children[0].children[3].size[1] + 2
 			self.ids.search_bar_clientes.width = self.ids.search_clientes_box.width * 0.8
 		Clock.schedule_interval(refresh_name, 0.05)
 
-		if len(self.ids.recycle_view.data) == 0:
-			for i in range(len(self.estoque.database.index.values)):
-				ids = self.estoque.database.index.values
-				categorias = self.estoque.database["CATEGORIA"].values
-				produtos = self.estoque.database["PRODUTO"].values
-				fornecedores = self.estoque.database["FORNECEDOR"].values
-				quantidades = self.estoque.database["QUANTIDADE"].values
-				precos = self.estoque.database["PRECO"].values
-				self.ids.recycle_view.data.append({'id_': str(ids[i]), 'categoria_': str(categorias[i]), 'nome_': str(produtos[i]), 'fornecedor_':str(fornecedores[i]), 'quantidade_':str(quantidades[i]), 'preco_':str(precos[i])})
+
+		def init(dt):
+			if len(self.ids.recycle_view.data) == 0:
+				for i in range(len(self.estoque.database.index.values)):
+					ids = self.estoque.database.index.values
+					categorias = self.estoque.database["CATEGORIA"].values
+					produtos = self.estoque.database["PRODUTO"].values
+					fornecedores = self.estoque.database["FORNECEDOR"].values
+					quantidades = self.estoque.database["QUANTIDADE"].values
+					precos = self.estoque.database["PRECO"].values
+					self.ids.recycle_view.data.append(
+						{'id_': str(ids[i]), 'categoria_': str(categorias[i]), 'nome_': str(produtos[i]),
+						 'fornecedor_': str(fornecedores[i]), 'quantidade_': str(quantidades[i]),
+						 'preco_': str(precos[i])})
+				delta_clock.cancel()
+				print("stopped")
+
+		delta_clock = Clock.schedule_interval(init, 0.1)
+
+
+
+
 
 class WindowManager(ScreenManager):
 	pass
 
-class InvisionStorage(MDApp):
+class Storage(MDApp):
 
 	def clientes_info_open(self, widget, *args):
 		animate = Animation(size_hint_x = 0.4, duration=0.05)
@@ -1235,19 +1235,15 @@ class InvisionStorage(MDApp):
 		Clock.schedule_interval(refresh_name, 0.05)
 
 	def build(self):
-		self.title = 'Invision Storage'
+		self.title = 'Storage'
 		self.icon = 'icon.png'
-		#return Builder.load_file('InvisionStorage.kv')
-
-
 
 	Window.maximize()
 
-	#Window.custom_titlebar = True
 
 
 
 if __name__ == '__main__':
-	InvisionStorage().run()
+	Storage().run()
 
 
