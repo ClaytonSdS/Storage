@@ -11,7 +11,7 @@ This project was made to improve Python skills and the main objective was to dev
 **2. Direct Download**
    - [Download Link](https://drive.google.com/file/d/1ozm70tbfQbpwiKb6c6SB5azXw2qNb-lZ/view?usp=share_link)
    - Extract Storage.rar
-   - Open Run\dist\Storage folder
+   - Open dist\Storage folder
    - Run Storage.exe file
    
 # Pictures
