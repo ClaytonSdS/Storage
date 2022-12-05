@@ -1,15 +1,9 @@
-![Logo Invision Study](https://user-images.githubusercontent.com/95229093/205111573-e5a97008-e1ec-4728-9c89-01574ce3fa07.png)
-
+![Storage](https://user-images.githubusercontent.com/95229093/205701589-760c6c39-c3ee-463b-a833-b960d7271b63.png)
 
 This project was made to improve Python skills and the main objective was to develop a software like to manage storage, clients and suppliers.
 
-
-# How to Use
-* First of all, you need to create your own subjects like math, physics, etc.
-* After that, you need to create topics that each subject has.
-* Finally, you can create new events based on your study routine in schedule menu.
 # How to Install
-**1. Clone this repository Github**
+**1. Clone this Github repository**
    - $ git clone https://github.com/ClaytonSdS/StudyControl.git
    - Open Run\dist\StudyControl folder
    - Run StudyControl.exe file
